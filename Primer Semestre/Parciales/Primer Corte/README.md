@@ -126,15 +126,12 @@ También podríamos implementar un sistema de menú más complejo que incluya m�
 #### **Documentación Python**
 
 ```python
-# Constantes para las velocidades de los proyectiles
-VELOCIDAD_FUEGO = 120  # metros por segundo
-VELOCIDAD_HIELO = 100  # metros por segundo
-VELOCIDAD_VENENO = 80  # metros por segundo
+VELOCIDADFUEGO = 120 
+VELOCIDADHIELO = 100  
+VELOCIDAD_ENENO = 80 
 
-# Solicitar al usuario la distancia al objetivo
 distancia = float(input("¿A qué distancia se encuentra tu enemigo? (en metros): "))
 
-# Bucle para asegurar que el usuario seleccione una opción válida
 while True:
     print("Elige un hechizo para combatir:")
     print("1. Hechizo de Fuego (120 m/s)")
