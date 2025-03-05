@@ -6,6 +6,33 @@ Trabajos de Python y C++
 
 ---
 
+## **1. Introducción**
+Este proyecto consiste en una herramienta para calcular el tiempo de impacto de proyectiles en el mundo de Aetheria, un popular MMORPG. Permite a los jugadores seleccionar un tipo de proyectil mágico y calcular su tiempo de impacto según la distancia del enemigo.
+
+## **Instalación**
+Para ejecutar el proyecto, sigue estos pasos:
+1. Asegúrate de tener Python 3.x o un compilador de C++ instalado comi dev-C++.
+3. Descarga visual studio code para poder programar y visualizar el codigo.
+4. Asegurate de instalar las extenciones correspondientes de c++y python.
+
+
+## **Guía de Uso**
+1. Ejecuta el programa en Python o C++.
+2. Ingresa la distancia al objetivo en metros.
+3. Selecciona un tipo de proyectil:
+   - **1. Fuego (120 m/s)**
+   - **2. Hielo (100 m/s)**
+   - **3. Veneno (80 m/s)**
+4. El programa calculará y mostrará el tiempo de impacto.
+
+## **Documentación Técnica**
+El código está organizado en:
+- **Constantes**: Definen las velocidades de los proyectiles.
+- **Entrada del usuario**: Solicita distancia y tipo de proyectil.
+- **Validación de datos**: Se asegura de que la entrada sea válida.
+- **Cálculo del tiempo de impacto**: Se divide la distancia por la velocidad del proyectil.
+
+
 ### **_PROBLEMA_**
 
 En el mundo de Aetheria, un popular MMORPG, los jugadores pueden lanzar diferentes tipos de proyectiles mágicos para derrotar a sus enemigos. Cada tipo de proyectil tiene una velocidad única, lo que afecta el tiempo que tarda en impactar en el objetivo. Tu tarea es ayudar a los jugadores a calcular el tiempo de impacto de sus proyectiles en función de la distancia al objetivo.
@@ -156,13 +183,13 @@ int main() {
 ---
 
 ### **CONCLUSIONES**
-Este proyecto demuestra cómo resolver un problema de cálculo simple utilizando estructuras de control en dos lenguajes de programación diferentes.
+conclusion.
 
 ### **LICENCIA**
-Este proyecto se distribuye bajo la licencia MIT.
+Aqui que pongo :p.
 
 ### **CONTRIBUCIONES**
-Si deseas contribuir, revisa el archivo CONTRIBUTING.md.
+Puedes contribuir a lo que sea con este codigo, es totalmente abiero, puedes hacer comentario, o de paso modificar el codigo en su totalidad.
 
 ### **ERRORES COMUNES**
 - Entrada no numérica en la distancia.
