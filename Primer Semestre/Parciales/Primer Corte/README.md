@@ -120,7 +120,7 @@ También podríamos implementar un sistema de menú más complejo que incluya m�
 > Aquí se insertará un diagrama de flujo que represente el proceso de selección y cálculo del tiempo de impacto.
 
 
-![ReferenciA](/ruta/a/la/imagen.jpg)
+![ReferenciA](/imagenes/diagrama.png)
 
 ---
 
