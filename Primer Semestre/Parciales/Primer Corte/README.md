@@ -1,6 +1,6 @@
 # **Pensamiento Algorítmico**
 
-Trabajos de Python y C++  
+Dady Sneider Loaiza Loaiza y Kamila Guzman
 
 ## **PRIMER PARCIAL PRIMER SEMESTRE - Proyectiles en Aetheria**
 
