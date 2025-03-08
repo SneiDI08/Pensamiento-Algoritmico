@@ -397,13 +397,12 @@ El hechizo de fuego ha demorado en impactar al enemigo en 2.00 segundos.
 - Entrada no numérica en la distancia.
 - Selección inválida de opción (solo 1, 2 o 3 permitidos).
 
+- Hay otros errores que son externos al codigo, problemas de compilacion, no tener el compilador respectivo instalados.
+
 ---
 
 ### **CONCLUSIONES**
-conclusion.
-
-### **LICENCIA**
-Aqui que pongo :p.
+Este primer trabajo nos ha permitido practicar la metodología de los parciales del primer semestre. Además, nos ha dado la oportunidad de demostrar los conocimientos adquiridos, profundizar en el tema y exigirnos más para adaptarnos y seguir avanzando en programacion. En este caso, el objetivo fue desarrollar un programa que cumpliera con los fundamentos de la programación, como el uso de variables, condicionales, bucles y sintaxis. A través de esta actividad, hemos evidenciado nuestro progreso y comprensión del tema.
 
 ### **CONTRIBUCIONES**
 Puedes contribuir a lo que sea con este codigo, es totalmente abiero, puedes hacer comentario, o de paso modificar el codigo en su totalidad.
