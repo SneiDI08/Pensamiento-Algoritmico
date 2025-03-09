@@ -351,16 +351,16 @@ En este programa te situa en una situacion especifica, donde tu eres un mago de 
 Este programa se organiza y se comppila en una serie de pasos secuenciales. Todo dentro del main() en el caso de c++, que se encarga de la entrada, el procesamiento y la salida. En cuanto Python no necesita de una funcion principal para funcionar.
 
 1. Entrada de Datos
-Se solicita la distancia al enemigo (double d).
-Se verifica si la entrada es válida.
-Se muestra un menú para que el usuario seleccione uno de los tres hechizos disponibles.
+ - Se solicita la distancia al enemigo (int d).
+ - Se verifica si la entrada es válida.
+ - Se muestra un menú para que el usuario seleccione uno de los tres hechizos disponibles.
 2. Procesamiento de Datos
-Se definen tres constantes (a = 120, b = 100, c = 80), que representan la velocidad de cada hechizo.
-Según la opción elegida, se divide la distancia entre la velocidad correspondiente para calcular el tiempo de impacto.
-Se almacena el resultado en x.
+ - Se definen tres constantes (a = 120, b = 100, c = 80), que representan la velocidad de cada hechizo.
+ - Según la opción elegida, se divide la distancia entre la velocidad correspondiente para calcular el tiempo de impacto.
+ - Se almacena el resultado en x.
 3. Salida de Datos
-Se imprime un mensaje indicando qué hechizo fue seleccionado.
-Se muestra el tiempo de impacto con dos decimales de precisión.
+ - Se imprime un mensaje indicando qué hechizo fue seleccionado.
+ - Se muestra el tiempo de impacto con dos decimales de precisión.
 
 Organización del Código
 El código se estructura en un solo bloque dentro de main():
