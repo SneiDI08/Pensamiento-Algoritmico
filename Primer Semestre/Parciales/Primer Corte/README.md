@@ -159,7 +159,7 @@ else:
     print("Elige un hechizo valido")
 ```
 ---
-# **Compilación de código en Linux (C++)**
+# **Compilación de código en Linux (Python)**
 # **Ejecución del Programa en Python**
 
 Python es un lenguaje de programación interpretado, por lo que no requiere compilación como C++. Para ejecutar código en **Windows, Linux, macOS o iOS**, sigue los siguientes pasos.
@@ -348,7 +348,7 @@ Existen algunas aplicaciones en la App Store que permiten compilar y ejecutar c�
 ## **Documentación Técnica**
 En este programa te situa en una situacion especifica, donde tu eres un mago de Aetheria con tres hechizo, tú eliges un hechizo para atacar a un enemigo y tu dirás la distancia a la que se encuentra. Dependiendo del hechizo seleccionado y la distancia al objetivo, el programa calcula el tiempo que tardará en impactar el proyectil.
 
-Este programa se organiza y se comppila en una serie de pasos secuenciales. Ltodo dentro del main() en el caso de c++, que se encarga de la entrada, el procesamiento y la salida. En cuanto Python no necesita de una funcion principal para funcionar.
+Este programa se organiza y se comppila en una serie de pasos secuenciales. Todo dentro del main() en el caso de c++, que se encarga de la entrada, el procesamiento y la salida. En cuanto Python no necesita de una funcion principal para funcionar.
 
 1. Entrada de Datos
 Se solicita la distancia al enemigo (double d).
