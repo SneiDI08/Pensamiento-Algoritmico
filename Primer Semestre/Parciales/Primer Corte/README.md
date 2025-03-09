@@ -7,7 +7,7 @@ Dady Sneider Loaiza Loaiza y Kamila Guzman
 ---
 
 ## **1. Introducción**
-En este proyecto se evidencia el conocimiento de los estudiantes acerca de conceptos básicos de los lenguajes de C++ y Python a través de un problema que permita explorar criterios como el manejo adecuado de variables, constantes, condicionales, bucles, entre otros valores lógicos aprendidos.
+En este proyecto se evidencia el conocimiento de los estudiantes acerca de conceptos básicos de los lenguajes de C++ y Python a través de un problema que permita explorar criterios como el manejo adecuado de variables, constantes, condicionales, bucles, entre otros conceptos lógicos aprendidos.
 El documento presenta los códigos junto con su explicación, la manera correcta de manejarlo y explicación de errores que usualmente suceden a la hora de programar.
 
 ## **Instalación en C++**
@@ -33,8 +33,8 @@ Para ejecutar el proyecto, sigue estos pasos:
 3. Ejecutamos el código.
 4. El programa pedirá al usuario una serie de datos, como la distancia a la que se encuentra el enemigo de ti; lo escribirás solo con números enteros.
 5. Una vez establecida la distancia, tendrás que escoger uno de los hechizos otorgados: fuego, hielo y veneno, con 1, 2 y 3 respectivamente.
-6. No podrás digitar números o caracteres fuera del alcance del programa; de lo contrario, se cerrará.
-7. El programa te dirá el tiempo que tarda el hechizo en impactar al enemigo.
+6. No podrás ingresar números o caracteres no permitidos, de lo contrario, el programa se cerrará
+7.El programa te indicará el tiempo que tarda el hechizo en impactar al enemigo.
 8. El programa se cerrará y podrás ejecutarlo nuevamente.
 
 # **INFORME**
@@ -117,9 +117,6 @@ También podríamos implementar un sistema de menú más complejo que incluya m�
 
 ### **_DIAGRAMA DE FLUJO_**
 
-> Aquí se insertará un diagrama de flujo que represente el proceso de selección y cálculo del tiempo de impacto.
-
-
 ![Referencia](diagrama1.png)
 
 ---
@@ -132,7 +129,7 @@ También podríamos implementar un sistema de menú más complejo que incluya m�
 a=120
 b=100
 c=80
-print("Mago de Aetheria, has entrado en una pelea contra unos enemigos de la tierra")
+print("Mago de Aetheria, has entrado en una pelea contra unos enemigos")
 d=int(input("¿A qué distancia se encuentra tu enemigo?\n"))
 print("Elige un hechizo para combatir")
 print("1. Hechizo de fuego (120m/s)")
@@ -146,17 +143,17 @@ if e== 1:
     x=d/a
     print (f"El hechizo de fuego ha impactado en {x:.2f} segundos")
 elif e == 2:
-    print("Has elgido el hechizo de hielo")
+    print("Has elegido el hechizo de hielo")
     print("Disparando el hechizo de hielo")
     x=d/b
     print(f"El hechizo de hielo ha impactado en {x:.2f} segundos")
 elif e == 3:
     print("Has elegido el hechizo de veneno")
-    print("Dsiparando el hechizo de veneno")
+    print("Disparando el hechizo de veneno")
     x=d/c
     print(f"El hechizo de veneno ha impactado en {x:.2f} segundos")
 else:
-    print("Elige un hechizo valido")
+    print("Elige un hechizo válido")
 ```
 ---
 # **Compilación de código en Linux (Python)**
@@ -242,7 +239,7 @@ int main(){
     int x;
     int d;
     
-    cout<<"Mago de Aetheria, has entrado en una pelea contra unos enemigos de la tierra"<<endl;
+    cout<<"Mago de Aetheria, has entrado en una pelea contra unos enemigos"<<endl;
 
     cout<<"¿A que distancia se encuentra tu enemigo?"<<endl;
     cout<<"Distancia: ";
