@@ -375,15 +375,15 @@ Salida del resultado: Se imprime la información al usuario de cuanto tardo en i
 
 Mago de Aetheria, has entrado en una pelea contra unos enemigos de la tierra.
 ¿A qué distancia se encuentra tu enemigo?
-Distancia: 240
+Distancia: 240 <--(Digitas la distacia a la que se encuentra tu enemigo)
 Elige un hechizo para combatir:
 1. Hechizo de fuego
 2. Hechizo de hielo
 3. Hechizo de veneno
-Opción: 1
+Opción: 1 <--(Eliges un numero del 1 al tres)
 Has elegido el hechizo de fuego.
 Disparando el hechizo de fuego...
-El hechizo de fuego ha demorado en impactar al enemigo en 2.00 segundos.
+El hechizo de fuego ha demorado en impactar al enemigo en 2.00 segundos. <-- (El programa arrojara el resultado dividiendo la distancia entre la velocidad del proyectil, el proyectil depende de la opcion que digitaste)
 
 ### **ERRORES COMUNES**
 - Entrada no numérica en la distancia.
