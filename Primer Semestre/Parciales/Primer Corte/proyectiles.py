@@ -1,28 +1,28 @@
-VELOCIDADFUEGO = 120 
-VELOCIDADHIELO = 100  
-VELOCIDAD_ENENO = 80 
+a:int=120
+b:int=100
+c:int=80
+print("Mago de Aetheria, has entrado en una pelea contra unos enemigos")
+d=int(input("¿A qué distancia se encuentra tu enemigo?\n"))
+print("Elige un hechizo para combatir")
+print("1. Hechizo de fuego (120m/s)")
+print("2. Hechizo de hielo (100m/s)")
+print("3. Hechizo de veneno (80m/s)")
 
-distancia = float(input("¿A qué distancia se encuentra tu enemigo? (en metros): "))
-
-while True:
-    print("Elige un hechizo para combatir:")
-    print("1. Hechizo de Fuego (120 m/s)")
-    print("2. Hechizo de Hielo (100 m/s)")
-    print("3. Hechizo de Veneno (80 m/s)")
-    
-    opcion = int(input("Selecciona una opción (1, 2 o 3): "))
-    
-    if opcion == 1:
-        tiempo = distancia / VELOCIDAD_FUEGO
-        print(f"El hechizo de Fuego tardará {tiempo} segundos en impactar.")
-        break
-    elif opcion == 2:
-        tiempo = distancia / VELOCIDAD_HIELO
-        print(f"El hechizo de Hielo tardará {tiempo} segundos en impactar.")
-        break
-    elif opcion == 3:
-        tiempo = distancia / VELOCIDAD_VENENO
-        print(f"El hechizo de Veneno tardará {tiempo} segundos en impactar.")
-        break
-    else:
-        print("Opción inválida. Por favor, selecciona una opción válida (1, 2 o 3).")
+e=int(input())
+if e== 1:
+    print("Has elegido el hechizo de fuego")
+    print("Disparando el hechizo de fuego")
+    x=d/a
+    print (f"El hechizo de fuego ha impactado en {x} segundos")
+elif e == 2:
+    print("Has elegido el hechizo de hielo")
+    print("Disparando el hechizo de hielo")
+    x=d/b
+    print(f"El hechizo de hielo ha impactado en {x} segundos")
+elif e == 3:
+    print("Has elegido el hechizo de veneno")
+    print("Disparando el hechizo de veneno")
+    x=d/c
+    print(f"El hechizo de veneno ha impactado en {x} segundos")
+else:
+    print("Elige un hechizo válido")
