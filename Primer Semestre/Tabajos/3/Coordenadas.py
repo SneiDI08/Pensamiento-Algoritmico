@@ -2,6 +2,7 @@ matriz_coordenadas = []
 caras = []
 a = 0
 b = 0
+al = 0
 
 while True:
     print("\n############################")
@@ -12,7 +13,6 @@ while True:
     print("3. Mostrar matrices")
     print("4. Salir")
     opcion = input("Seleccione una opción: ")
-    
     if opcion == "1":
         a = int(input("Cuántos vértices quieres: "))
         matriz_coordenadas = []
@@ -27,11 +27,12 @@ while True:
             y = int(input(f"Ingrese y para el punto {i+1}: "))
             z = int(input(f"Ingrese z para el punto {i+1}: "))
             matriz_coordenadas.append([x, y, z])
-            print()  
-    
+            
+        al = int(len(matriz_coordenadas))
     elif opcion == "2":
-        if a == 0:
-            print("\nPrimero debes ingresar los vértices.")
+        if al < 3:
+            print("\nPrimero debes ingresar los vértices, al menos 3.")
+
         else:
             b = int(input("¿Cuántas caras quieres conectar?: "))
             while b > a:
