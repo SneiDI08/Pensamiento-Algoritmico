@@ -24,6 +24,6 @@ Para compilar y ejecutar el programa, es necesario contar con un entorno compati
 
 ### **Pasos para ejecutar:**  
 1. Accede a tu entorno de desarrollo preferido.  
-2. Dirígete al repositorio y abre la carpeta correspondiente (Ejemplo: `trabajo/carpeta 3`).  
+2. Dirígete al repositorio y abre la carpeta correspondiente (`Primer Semestre/Tabajos/3`).  
 3. Copia y pega el código según el lenguaje de programación que desees compilar.  
 4. Ejecuta el código en el compilador elegido.  
