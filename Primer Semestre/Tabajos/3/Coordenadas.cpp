@@ -1,113 +1,93 @@
 #include <iostream>
-
 using namespace std;
-
 int main() {
-    int a = 0, b = 0;
-    int* matriz_coordenadas = nullptr;
-    int* cantidad_vertices_por_cara = nullptr;
-    int** matriz_caras = nullptr;
+    int matriz_coordenadas[100][3]; 
+    int caras[100][10]; 
+    int a = 0, b = 0, al = 0;
     int opcion;
-
-    do {
-        cout << "\n############################";
-        cout << "\n#        MENÚ             #";
-        cout << "\n############################";
-        cout << "\n1. Ingresar vértices";
-        cout << "\n2. Ingresar caras";
-        cout << "\n3. Mostrar matrices";
-        cout << "\n4. Salir";
-        cout << "\nSeleccione una opción: ";
+    while (true) {
+        cout << "\n############################\n";
+        cout << "#####        MENÚ      #####\n";
+        cout << "############################\n";
+        cout << "1. Ingresar vértices\n";
+        cout << "2. Ingresar caras\n";
+        cout << "3. Mostrar matrices\n";
+        cout << "4. Salir\n";
+        cout << "Seleccione una opción: ";
         cin >> opcion;
-
         if (opcion == 1) {
-            cout << "\n¿Cuántos vértices necesitas?\nNúmero de vértices: ";
-            while (!(cin >> a) || a <= 0) {
-                cin.clear();
-                cin.ignore(10000, '\n');
-                cout << "Por favor, ingresa un número válido: ";
-            }
-
-            matriz_coordenadas = new int[a * 3];
-
-            cout << "\nIngresa las coordenadas de los vértices:\n";
+            cout << "\nCuántos vértices quieres no puedes pasarte de los 100: ";
+            cin >> a;
+            al = a;
+            cout << "\n################################\n";
+            cout << "##### Ingrese las coordenadas #####\n";
+            cout << "################################\n\n";
             for (int i = 0; i < a; i++) {
-                cout << "Vértice " << i + 1 << "\nX: ";
-                cin >> matriz_coordenadas[i * 3];
-                cout << "Y: ";
-                cin >> matriz_coordenadas[i * 3 + 1];
-                cout << "Z: ";
-                cin >> matriz_coordenadas[i * 3 + 2];
+                cout << "Vértice " << i + 1 << "\n";
+                cout << "Ingrese x: "; cin >> matriz_coordenadas[i][0];
+                cout << "Ingrese y: "; cin >> matriz_coordenadas[i][1];
+                cout << "Ingrese z: "; cin >> matriz_coordenadas[i][2];
             }
         }
         else if (opcion == 2) {
-            if (a == 0) {
-                cout << "\nPrimero debes ingresar los vértices.";
-                continue;
-            }
-
-            cout << "\n¿Cuántas caras necesitas?\nNúmero de caras: ";
-            while (!(cin >> b) || b <= 0) {
-                cin.clear();
-                cin.ignore(10000, '\n');
-                cout << "Por favor, ingresa un número válido: ";
-            }
-
-            cantidad_vertices_por_cara = new int[b];
-            matriz_caras = new int*[b];
-
-            for (int i = 0; i < b; i++) {
-                cout << "Cantidad de vértices para la cara " << i + 1 << ": ";
-                cin >> cantidad_vertices_por_cara[i];
-
-                matriz_caras[i] = new int[cantidad_vertices_por_cara[i]];
-
-                for (int j = 0; j < cantidad_vertices_por_cara[i]; j++) {
-                    cout << "Vértice " << j + 1 << " (índice): ";
-                    cin >> matriz_caras[i][j];
+            if (al < 3) {
+                cout << "\nPrimero debes ingresar los vértices, al menos 3." << endl;
+            } else {
+                cout << "¿Cuántas caras quieres conectar?: ";
+                cin >> b;
+                while (b > a) {
+                    cout << "Error: No puedes tener más caras que vértices." << endl;
+                    cin >> b;
+                }
+                cout << "\n################################\n";
+                cout << "##### Ingrese las caras #####\n";
+                cout << "################################\n\n";
+                for (int i = 0; i < b; i++) {
+                    int c;
+                    cout << "Cara " << i + 1 << "\n";
+                    cout << "¿Cuántos vértices tiene la cara?: ";
+                    cin >> c;
+                    while (c < 3 || c > a) {
+                        cout << "Error: Una cara debe tener al menos 3 vértices y no puede exceder los existentes." << endl;
+                        cin >> c;
+                    }
+                    for (int j = 0; j < c; j++) {
+                        cout << "Ingrese el índice del vértice " << j + 1 << " para la cara (1 - " << a << "): ";
+                        cin >> caras[i][j];
+                        while (caras[i][j] < 1 || caras[i][j] > a) {
+                            cout << "Error: El vértice debe estar entre 1 y " << a << "." << endl;
+                            cin >> caras[i][j];
+                        }
+                    }
+                    caras[i][c] = -1;
                 }
             }
         }
         else if (opcion == 3) {
             if (a == 0) {
-                cout << "\nNo hay datos ingresados aún.";
-                continue;
-            }
-
-            cout << "\n#### Matriz de coordenadas ####\n";
-            for (int i = 0; i < a; i++) {
-                cout << "Vértice " << i + 1 << ": ";
-                cout << "x = " << matriz_coordenadas[i * 3] << ", ";
-                cout << "y = " << matriz_coordenadas[i * 3 + 1] << ", ";
-                cout << "z = " << matriz_coordenadas[i * 3 + 2] << endl;
-            }
-
-            if (b > 0) {
-                cout << "\n#### Matriz de caras ####\n";
+                cout << "\nNo hay datos ingresados aún." << endl;
+            } else {
+                cout << "\n#### Matriz de coordenadas ####\n";
+                for (int i = 0; i < a; i++) {
+                    cout << "Vértice " << i + 1 << ": x = " << matriz_coordenadas[i][0] << ", y = " << matriz_coordenadas[i][1] << ", z = " << matriz_coordenadas[i][2] << endl;
+                }
+                cout << "\n#### Caras ####\n";
                 for (int i = 0; i < b; i++) {
                     cout << "Cara " << i + 1 << ": ";
-                    for (int j = 0; j < cantidad_vertices_por_cara[i]; j++) {
-                        cout << matriz_caras[i][j] << " ";
+                    for (int j = 0; j < 10 && caras[i][j] != -1; j++) {
+                        cout << caras[i][j] << " ";
                     }
                     cout << endl;
                 }
             }
         }
         else if (opcion == 4) {
-            cout << "\nSaliendo del programa...";
+            cout << "\nSaliendo del programa..." << endl;
+            break;
         }
         else {
-            cout << "\nOpción no válida, intenta de nuevo.";
+            cout << "\nOpción no válida, intenta de nuevo." << endl;
         }
-
-    } while (opcion != 4);
-
-    delete[] matriz_coordenadas;
-    delete[] cantidad_vertices_por_cara;
-    for (int i = 0; i < b; i++) {
-        delete[] matriz_caras[i];
     }
-    delete[] matriz_caras;
-
     return 0;
 }
