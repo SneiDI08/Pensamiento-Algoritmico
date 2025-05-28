@@ -21,7 +21,7 @@ void menu_principal() {
         system("cls");
 
         cout << "\t\t\t###############" << endl;
-        cout << "\t\t\t# PAPUMON dad  #" << endl;
+        cout << "\t\t\t# PAPUMON :v  #" << endl;
         cout << "\t\t\t###############" << endl;
 
         cout << "\n\t1. Iniciar Juego (Vs. Jugador)" << endl;
@@ -394,7 +394,7 @@ void menu_batalla_vs_ia(vector<papumon>& equipo_jugador, vector<papumon>& equipo
 }
 
 void draw_papumon_ascii(const papumon& p, int x_offset) {
-    for (const string& line : p.ascii_art) { // Iterate through the Papumon's own ASCII art
+    for (const string& line : p.ascii_art) {
         cout << string(x_offset, ' ') << line << endl;
     }
 }
@@ -418,7 +418,7 @@ void draw_health_bar(int current_hp, int max_hp, int length, int x_offset) {
 void display_battle_state(const papumon& p1, const papumon& p2, int turno, const string& player1_name, const string& player2_name) {
     const int ARENA_WIDTH = 80;
     const int PAPUMON_DISPLAY_WIDTH = ARENA_WIDTH / 2;
-    const int PAPUMON_ART_HEIGHT = 7; // This should match the height of your ASCII art
+    const int PAPUMON_ART_HEIGHT = 7;
 
     cout << string(ARENA_WIDTH, '=') << endl;
     cout << string((ARENA_WIDTH - string("######### PAPUMON BATTLE ARENA #########").length()) / 2, ' ') << "######### PAPUMON BATTLE ARENA #########" << endl;
@@ -448,18 +448,16 @@ void display_battle_state(const papumon& p1, const papumon& p2, int turno, const
     cout << string(ARENA_WIDTH - p1_aguante_line.length() - p2_aguante_line.length(), ' ');
     cout << p2_aguante_line << endl;
 
-    // Drawing ASCII art side-by-side using the papumon's own art
     for (int i = 0; i < PAPUMON_ART_HEIGHT; ++i) {
-        // Get the current line of ASCII art for each Papumon
+       
         string p1_art_line = (i < p1.ascii_art.size()) ? p1.ascii_art[i] : "";
         string p2_art_line = (i < p2.ascii_art.size()) ? p2.ascii_art[i] : "";
 
-        // Calculate offset to center each art piece within its half
         int p1_line_offset = (PAPUMON_DISPLAY_WIDTH - p1_art_line.length()) / 2;
         int p2_line_offset = (PAPUMON_DISPLAY_WIDTH - p2_art_line.length()) / 2;
 
         cout << string(p1_line_offset, ' ') << p1_art_line;
-        // Calculate spacing between the two arts
+
         cout << string(ARENA_WIDTH - (p1_line_offset + p1_art_line.length()) - (p2_line_offset + p2_art_line.length()), ' ');
         cout << string(p2_line_offset, ' ') << p2_art_line << endl;
     }

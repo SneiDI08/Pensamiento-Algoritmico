@@ -6,7 +6,6 @@ ataque::ataque(string nombre_ataque, int poder_ataque, int uso)
     : nombre(nombre_ataque), poder(poder_ataque), uso(uso) {
 }
 
-// Updated constructor to accept ascii_art
 papumon::papumon(string nombre, string tipo, int vida, int defensa, int aguante, vector<ataque> ataques, vector<string> ascii_art)
     : nombre(nombre), tipo(tipo), vida(vida), defensa(defensa), aguante(aguante), ataques(ataques), ascii_art(ascii_art) {
 }
@@ -58,7 +57,6 @@ vector<ataque> ataques_normal() {
 }
 
 vector<papumon> papumones() {
-    // Define ASCII art for each Papumon
     vector<string> ignivorax_art = {
         "  /\\_/\\  ",
         " ( o.o ) ",
@@ -109,7 +107,6 @@ vector<papumon> papumones() {
         "  \\___)=(___/"
     };
 
-    // New ASCII art models as requested
     vector<string> flamemur_art = {
         "   /\\   /\\  ",
         "  (  \\_/  ) ",
