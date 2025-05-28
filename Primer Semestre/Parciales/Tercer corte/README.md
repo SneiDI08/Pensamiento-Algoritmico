@@ -2,7 +2,7 @@
 
 ## Integrantes:
 * Dady Sneider Loaiza Loaiza
-* David
+* David Hernandez Leyton
 
 ---
 
