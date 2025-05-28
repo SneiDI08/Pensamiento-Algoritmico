@@ -14,7 +14,7 @@ papumon::papumon(string nombre, string tipo, int vida, int defensa, int aguante,
 
 vector<ataque> ataques_viento() {
     return {
-        ataque("Ráfaga Celeste", 15, 5),
+        ataque("RÃ¡faga Celeste", 15, 5),
         ataque("Viento Cortante", 20, 7),
         ataque("Torbellino Fantasma", 22, 10),
         ataque("Neblina Tempestad", 30, 15)
@@ -25,7 +25,7 @@ vector<ataque> ataques_fuego() {
     return {
         ataque("Llama Ardiente", 15, 5),
         ataque("Lluvia de Fuego", 20, 7),
-        ataque("Explosión Flamígera", 22, 10),
+        ataque("ExplosiÃ³n FlamÃ­gera", 22, 10),
         ataque("Tormenta de Llamas", 32, 17)
     };
 };
@@ -51,9 +51,9 @@ vector<ataque> ataques_tierra() {
 vector<ataque> ataques_normal() {
     return {
         ataque("Golpe Normal", 15, 5),
-        ataque("Puño Feroz", 20, 7),
-        ataque("Puño Desgarrador", 22, 10),
-        ataque("Golpe Crítico", 30, 15)
+        ataque("PuÃ±o Feroz", 20, 7),
+        ataque("PuÃ±o Desgarrador", 22, 10),
+        ataque("Golpe CrÃ­tico", 30, 15)
     };
 }
 
