@@ -1,75 +1,70 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, simpledialog
 import datetime
 
-# --- Constantes Globales ---
-FILAS = 10  # Número de filas en el mapa del parqueadero
-COLUMNAS = 10  # Número de columnas en el mapa del parqueadero
-CELL_SIZE = 50  # Tamaño de cada celda en píxeles
-TARIFA = 100  # Tarifa por minuto (ej. $100 por minuto)
-TOTAL_ESPACIOS = 0  # Se calculará dinámicamente en base al mapa
+FILAS = 10
+COLUMNAS = 10
+CELL_SIZE = 50
+TOTAL_ESPACIOS = 0  
+TARIFAS_POR_MINUTO = {
+    'carro': 150,
+    'moto': 100,
+    'bus': 200
+}
+HORAS_PICO = [
+    (7, 0, 9, 0),
+    (17, 0, 19, 0)
+]
+TARIFA_ADICIONAL_PICO = 50 
+TIEMPO_GRACIA_RESERVA_MINUTOS = 3 
+TIEMPO_GRACIA_ESTACIONAMIENTO_MINUTOS = 3 
 
-# Definición de colores para los diferentes tipos de celdas
 COLORES = {
-    'X': '#7f8c8d',  # Caminos (gris oscuro)
-    'P': '#2ecc71',  # Espacio de parking disponible (verde)
-    'R': '#f1c40f',  # Espacio reservado (amarillo)
-    'E': '#3498db',  # Entrada (azul)
-    'S': '#e74c3c',  # Salida (rojo)
-    'O_optimus': '#9b59b6',  # Vehículo tipo 'optimus' ocupando un espacio (morado)
-    'O_bumblebee': '#1abc9c', # Vehículo tipo 'bumblebee' ocupando un espacio (verde azulado)
-    'O_megatron': '#e67e22', # Vehículo tipo 'megatron' ocupando un espacio (naranja)
-    'E_TEXT': '#3498db', # Color para el texto de entrada
-    'S_TEXT': '#e74c3c'  # Color para el texto de salida
+    'X': '#7f8c8d', 
+    'P': '#2ecc71', 
+    'R': '#f1c40f',
+    'E': '#3498db',
+    'S': '#e74c3c',
+    'O_carro': '#9b59b6',
+    'O_moto': '#1abc9c',
+    'O_bus': '#e67e22',
+    'E_TEXT': '#3498db',
+    'S_TEXT': '#e74c3c'
 }
 
 class ParqueaderoApp:
     def __init__(self, root):
-        """
-        Inicializa la aplicación del parqueadero.
-        Configura la ventana principal, el lienzo, los controles y las estructuras de datos.
-        """
         self.root = root
         self.root.title("Sistema de Gestión de Parqueadero")
-        self.root.geometry("1200x800") # Tamaño de la ventana principal
+        self.root.geometry("1200x800") 
 
-        # --- Variables de estado ---
-        # self.mapa: Representación de la cuadrícula del parqueadero.
-        # 'X': Camino, 'P': Parking, 'R': Reservado, 'O_tipo': Ocupado por tipo de vehículo,
-        # 'E': Entrada, 'S': Salida, 'E_TEXT': Texto Entrada, 'S_TEXT': Texto Salida
         self.mapa = []
-        self.vehiculos = {}  # Diccionario para almacenar vehículos: {placa: (tipo, fila, columna, hora_entrada)}
+        self.vehiculos = {}
 
-        # --- Configuración de la interfaz de usuario ---
         self.setup_ui()
-        self.inicializar_mapa() # Inicializa el mapa del parqueadero
-        self.dibujar_mapa() # Dibuja el mapa inicial en el lienzo
-        self.actualizar_lista_vehiculos() # Carga la lista de vehículos
-        self.actualizar_estadisticas() # Carga las estadísticas iniciales
-        self.actualizar_reloj() # Inicia el reloj
+        self.inicializar_mapa() 
+        self.dibujar_mapa() 
+        self.actualizar_lista_vehiculos() 
+        self.actualizar_estadisticas() 
+        self.actualizar_reloj() 
+        self.verificar_reservas_expiradas() 
 
     def setup_ui(self):
-        """Configura los elementos de la interfaz de usuario."""
-        # Frame principal para organizar los elementos
         main_frame = ttk.Frame(self.root, padding="10")
         main_frame.pack(fill=tk.BOTH, expand=True)
 
-        # --- Sección del Mapa (Izquierda) ---
         map_frame = ttk.LabelFrame(main_frame, text="Mapa del Parqueadero", padding="10")
         map_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
 
         self.canvas = tk.Canvas(map_frame, bg="#bdc3c7", width=COLUMNAS * CELL_SIZE, height=FILAS * CELL_SIZE, relief="ridge", bd=2)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
-        # --- Sección de Controles y Estadísticas (Derecha) ---
         control_frame = ttk.Frame(main_frame, padding="10")
         control_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=5, pady=5)
 
-        # Reloj
         self.reloj_label = ttk.Label(control_frame, text="", font=("Arial", 14, "bold"))
         self.reloj_label.pack(pady=10)
 
-        # Controles de Vehículos
         vehicle_control_frame = ttk.LabelFrame(control_frame, text="Control de Vehículos", padding="10")
         vehicle_control_frame.pack(pady=10, fill=tk.X)
 
@@ -78,16 +73,15 @@ class ParqueaderoApp:
         self.placa_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
         ttk.Label(vehicle_control_frame, text="Tipo de Vehículo:").grid(row=1, column=0, padx=5, pady=5, sticky="w")
-        self.tipo_var = tk.StringVar(value="optimus") # Valor por defecto
-        tipo_options = [("Carro", "optimus"), ("Moto", "bumblebee"), ("Otro", "megatron")]
+        self.tipo_var = tk.StringVar(value="carro") # Default value
+        tipo_options = [("Carro", "carro"), ("Moto", "moto"), ("Bus", "bus")]
         for i, (text, value) in enumerate(tipo_options):
             ttk.Radiobutton(vehicle_control_frame, text=text, variable=self.tipo_var, value=value).grid(row=1, column=1+i, padx=5, pady=2, sticky="w")
 
-        ttk.Button(vehicle_control_frame, text="Ingresar Vehículo", command=self.ingresar_vehiculo).grid(row=2, column=0, columnspan=2, pady=5, sticky="ew")
-        ttk.Button(vehicle_control_frame, text="Retirar Vehículo", command=self.retirar_vehiculo).grid(row=3, column=0, columnspan=2, pady=5, sticky="ew")
-        ttk.Button(vehicle_control_frame, text="Reservar Espacio", command=self.reservar_espacio).grid(row=4, column=0, columnspan=2, pady=5, sticky="ew")
+        ttk.Button(vehicle_control_frame, text="Ingresar Vehículo", command=self.ingresar_vehiculo).grid(row=2, column=0, columnspan=3, pady=5, sticky="ew")
+        ttk.Button(vehicle_control_frame, text="Retirar Vehículo", command=self.retirar_vehiculo).grid(row=3, column=0, columnspan=3, pady=5, sticky="ew")
+        ttk.Button(vehicle_control_frame, text="Reservar Espacio", command=self.reservar_espacio_ui).grid(row=4, column=0, columnspan=3, pady=5, sticky="ew")
 
-        # Estadísticas del Parqueadero
         stats_frame = ttk.LabelFrame(control_frame, text="Estadísticas", padding="10")
         stats_frame.pack(pady=10, fill=tk.X)
 
@@ -99,14 +93,14 @@ class ParqueaderoApp:
             "Porcentaje de Ocupación:": "Ocupación",
             "Carros Ocupados:": "Carros",
             "Motos Ocupadas:": "Motos",
-            "Otros Vehículos Ocupados:": "Otros"
+            "Buses Ocupados:": "Buses"
         }
         for i, (label_text, key) in enumerate(stats_data.items()):
             ttk.Label(stats_frame, text=label_text).grid(row=i, column=0, padx=5, pady=2, sticky="w")
             self.stats_labels[key] = ttk.Label(stats_frame, text="0", font=("Arial", 10, "bold"))
             self.stats_labels[key].grid(row=i, column=1, padx=5, pady=2, sticky="e")
 
-        # Lista de Vehículos Estacionados
+        # lista de vehiculos reservados
         list_frame = ttk.LabelFrame(control_frame, text="Vehículos Estacionados / Reservados", padding="10")
         list_frame.pack(pady=10, fill=tk.BOTH, expand=True)
 
@@ -114,26 +108,20 @@ class ParqueaderoApp:
         self.tree = ttk.Treeview(list_frame, columns=columns, show="headings")
         for col in columns:
             self.tree.heading(col, text=col)
-            self.tree.column(col, width=100, anchor="center") # Ajustar ancho de columna
+            self.tree.column(col, width=100, anchor="center")
         self.tree.pack(fill=tk.BOTH, expand=True)
 
-        # Scrollbar para el Treeview
         scrollbar = ttk.Scrollbar(list_frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
         scrollbar.pack(side="right", fill="y")
 
-
     def inicializar_mapa(self):
-        """
-        Inicializa la cuadrícula del mapa del parqueadero.
-        Define los caminos, espacios de parking, entrada y salida.
-        """
-        global TOTAL_ESPACIOS # Acceder a la variable global
+        
+        global TOTAL_ESPACIOS
+        TOTAL_ESPACIOS = 0
 
-        # Crear un mapa vacío con caminos 'X'
         self.mapa = [['X' for _ in range(COLUMNAS)] for _ in range(FILAS)]
 
-        # Definir los espacios de parking 'P'
         parking_spots = [
             (1,1), (1,2), (1,3), (1,4),
             (3,1), (3,2), (3,3), (3,4),
@@ -148,175 +136,202 @@ class ParqueaderoApp:
         for r, c in parking_spots:
             if 0 <= r < FILAS and 0 <= c < COLUMNAS:
                 self.mapa[r][c] = 'P'
-                TOTAL_ESPACIOS += 1 # Contar los espacios de parking
+                TOTAL_ESPACIOS += 1
 
-        # Definir la entrada y salida
-        self.mapa[0][0] = 'E' # Entrada
-        self.mapa[0][1] = 'E_TEXT' # Texto para entrada
-        self.mapa[FILAS-1][COLUMNAS-1] = 'S' # Salida
-        self.mapa[FILAS-1][COLUMNAS-2] = 'S_TEXT' # Texto para salida
+        self.mapa[0][0] = 'E' 
+        self.mapa[0][1] = 'E_TEXT' 
+        self.mapa[FILAS-1][COLUMNAS-1] = 'S' 
+        self.mapa[FILAS-1][COLUMNAS-2] = 'S_TEXT' 
 
     def dibujar_mapa(self):
         """
-        Dibuja el mapa del parqueadero en el lienzo (canvas).
-        Cada celda se dibuja con su color y contenido correspondiente.
+        Dibuja el mapa de aparcamiento en el lienzo.
+        Cada celda se dibuja con su correspondiente color y contenido.
         """
-        self.canvas.delete("all") # Limpiar el lienzo antes de redibujar
+        self.canvas.delete("all")
 
-        for i in range(FILAS): # FILAS
-            for j in range(COLUMNAS): # COLUMNAS
+        for i in range(FILAS):
+            for j in range(COLUMNAS):
                 x1 = j * CELL_SIZE
                 y1 = i * CELL_SIZE
                 x2 = x1 + CELL_SIZE
                 y2 = y1 + CELL_SIZE
-                tipo = self.mapa[i][j]
+                tipo_celda = self.mapa[i][j]
 
-                # Obtener el color de la celda, por defecto gris oscuro para caminos
-                color = COLORES.get(tipo, '#7f8c8d')
+                color = COLORES.get(tipo_celda, '#7f8c8d')
 
-                # Colores específicos para tipos de celda que no son 'X'
-                if tipo == 'P':
+                if tipo_celda == 'P':
                     color = COLORES['P']
-                elif tipo.startswith('O_'): # Vehículo ocupando un espacio (ej. 'O_optimus')
-                    color = COLORES[tipo]
-                elif tipo == 'R': # Espacio reservado
+                elif tipo_celda.startswith('O_'): 
+                    color = COLORES[tipo_celda]
+                elif tipo_celda == 'R':
                     color = COLORES['R']
-                elif tipo == 'E': # Entrada
+                elif tipo_celda == 'E':
                     color = COLORES['E']
-                elif tipo == 'S': # Salida
+                elif tipo_celda == 'S':
                     color = COLORES['S']
-                elif tipo == 'E_TEXT': # Celda de texto de entrada
+                elif tipo_celda == 'E_TEXT': 
                     color = COLORES['E_TEXT']
-                elif tipo == 'S_TEXT': # Celda de texto de salida
+                elif tipo_celda == 'S_TEXT': 
                     color = COLORES['S_TEXT']
 
-                # Dibujar el rectángulo de la celda
-                self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline='#34495e', width=1) # Contorno oscuro
+                self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline='#34495e', width=1) # Dark outline
 
-                # Dibujar texto de ENTRADA/SALIDA
-                if tipo == 'E_TEXT':
+                # Dibuja la entrada y salida de texto
+                if tipo_celda == 'E_TEXT':
                     self.canvas.create_text((x1+x2)//2, (y1+y2)//2, text="ENTRADA", font=("Arial", 10, "bold"), fill='white')
-                elif tipo == 'S_TEXT':
+                elif tipo_celda == 'S_TEXT':
                     self.canvas.create_text((x1+x2)//2, (y1+y2)//2, text="SALIDA", font=("Arial", 10, "bold"), fill='white')
 
-                # Mostrar placa e icono si hay vehículo o reserva
+                # Visualizar la matrícula y el icono si hay un vehículo o una reserva
                 placa_en_celda = None
                 tipo_vehiculo_actual = None
                 for placa, datos in self.vehiculos.items():
                     v_type, vi, vj, _ = datos
                     if vi == i and vj == j:
                         placa_en_celda = placa
-                        tipo_vehiculo_actual = v_type # Obtener el tipo real del vehículo (optimus, bumblebee, megatron, R)
+                        tipo_vehiculo_actual = v_type # Obtener el tipo de vehículo real (carro, moto, bus, R)
                         break
 
                 if placa_en_celda:
                     display_text = placa_en_celda
                     icon_text = ""
-                    if tipo_vehiculo_actual == 'optimus':
+                    if tipo_vehiculo_actual == 'carro':
                         icon_text = "CARRO"
-                    elif tipo_vehiculo_actual == 'bumblebee':
+                    elif tipo_vehiculo_actual == 'moto':
                         icon_text = "MOTO"
-                    elif tipo_vehiculo_actual == 'megatron':
+                    elif tipo_vehiculo_actual == 'bus':
                         icon_text = "BUS"
-                    elif tipo_vehiculo_actual == 'R': # Si es una reserva
+                    elif tipo_vehiculo_actual == 'R': 
                         icon_text = "RES"
-                        display_text = placa_en_celda # Mostrar la placa de la reserva
+                        display_text = placa_en_celda 
+                    
+                    if icon_text and icon_text != "RES": 
+                        self.canvas.create_text((x1+x2)//2, y1 + CELL_SIZE/3 + 2, text=icon_text, font=("Arial", 10, "bold"), fill='white') 
+                        self.canvas.create_text((x1+x2)//2, y1 + 2*CELL_SIZE/3 - 2, text=display_text, font=("Arial", 7, "bold"), fill='white') 
+                    else: 
+                        self.canvas.create_text((x1+x2)//2, (y1+y2)//2, text=display_text, font=("Arial", 8, "bold"), fill='white') 
+                elif tipo_celda == 'R' and not placa_en_celda: 
+                    self.canvas.create_text((x1+x2)//2, (y1+y2)//2, text="RES", font=("Arial", 8, "bold"), fill='white') 
 
-                    # Centrar el texto y el icono
-                    if icon_text and icon_text != "RES": # Si es un vehículo con icono de texto (no una reserva)
-                        self.canvas.create_text((x1+x2)//2, y1 + CELL_SIZE/3 + 2, text=icon_text, font=("Arial", 10, "bold"), fill='white') # Ajuste de posición
-                        self.canvas.create_text((x1+x2)//2, y1 + 2*CELL_SIZE/3 - 2, text=display_text, font=("Arial", 7, "bold"), fill='white') # Ajuste de posición y tamaño de fuente
-                    else: # Si es "RES" o solo la placa (para reservas o casos sin icono específico)
-                        self.canvas.create_text((x1+x2)//2, (y1+y2)//2, text=display_text, font=("Arial", 8, "bold"), fill='white') # Ajuste de tamaño de fuente
-                elif tipo == 'R' and not placa_en_celda: # Si la celda está marcada como 'R' pero no hay placa asociada (ej. reserva sin placa en vehiculos)
-                    self.canvas.create_text((x1+x2)//2, (y1+y2)//2, text="RES", font=("Arial", 8, "bold"), fill='white') # Ajuste de tamaño de fuente
-
-
-                # Dibujar líneas discontinuas para simular divisiones de parking
-                if tipo == 'P' or tipo.startswith('O_') or tipo == 'R':
-                    # Líneas horizontales en la parte superior e inferior de los spots
+                
+                if tipo_celda == 'P' or tipo_celda.startswith('O_') or tipo_celda == 'R':
+                    
                     self.canvas.create_line(x1, y1, x2, y1, fill='white', dash=(2,2), width=1)
                     self.canvas.create_line(x1, y2, x2, y2, fill='white', dash=(2,2), width=1)
-                    # Líneas verticales a los lados de los spots
+                    
                     self.canvas.create_line(x1, y1, x1, y2, fill='white', dash=(2,2), width=1)
                     self.canvas.create_line(x2, y1, x2, y2, fill='white', dash=(2,2), width=1)
 
-        self.root.update_idletasks() # Fuerza la actualización del canvas
+        self.root.update_idletasks() 
 
     def actualizar_lista_vehiculos(self):
         """Actualiza la tabla de vehículos estacionados."""
         for item in self.tree.get_children():
-            self.tree.delete(item) # Borra todos los elementos actuales
+            self.tree.delete(item) 
         for placa, datos in self.vehiculos.items():
             tipo, _, _, hora = datos
-            # Asegurarse de que las reservas también se muestren
-            display_tipo = "Reservado" if tipo == 'R' else tipo.capitalize().replace('optimus', 'Carro').replace('bumblebee', 'Moto').replace('megatron', 'Otro')
+            
+            display_tipo = "Reservado" if tipo == 'R' else tipo.capitalize()
             self.tree.insert('', 'end', values=(placa, display_tipo, hora.strftime("%Y-%m-%d %H:%M:%S")))
 
     def actualizar_estadisticas(self):
-        """Actualiza las etiquetas de estadísticas del parqueadero."""
         ocupados = 0
         carros_ocupados = 0
         motos_ocupadas = 0
-        otros_ocupados = 0
+        buses_ocupados = 0
+        reservados = 0
 
         for placa, datos in self.vehiculos.items():
             tipo, _, _, _ = datos
-            if tipo != 'R': # Contar solo vehículos que están físicamente en el parqueadero
+            if tipo == 'R': 
+                reservados += 1
+            else: 
                 ocupados += 1
-                if tipo == 'optimus':
+                if tipo == 'carro':
                     carros_ocupados += 1
-                elif tipo == 'bumblebee':
+                elif tipo == 'moto':
                     motos_ocupadas += 1
-                elif tipo == 'megatron':
-                    otros_ocupados += 1
+                elif tipo == 'bus':
+                    buses_ocupados += 1
 
-        disponibles = TOTAL_ESPACIOS - ocupados
-        # Asegúrate de que TOTAL_ESPACIOS no sea cero para evitar división por cero
-        porcentaje = (ocupados / TOTAL_ESPACIOS) * 100 if TOTAL_ESPACIOS > 0 else 0
+        total_ocupados_y_reservados = ocupados + reservados
+        disponibles = TOTAL_ESPACIOS - total_ocupados_y_reservados
+
+        porcentaje = (total_ocupados_y_reservados / TOTAL_ESPACIOS) * 100 if TOTAL_ESPACIOS > 0 else 0
 
         self.stats_labels["Totales"].config(text=str(TOTAL_ESPACIOS))
-        self.stats_labels["Ocupados"].config(text=str(ocupados))
+        self.stats_labels["Ocupados"].config(text=f"{ocupados} (Reservados: {reservados})")
         self.stats_labels["Disponibles"].config(text=str(disponibles))
         self.stats_labels["Ocupación"].config(text=f"{porcentaje:.1f}%")
         self.stats_labels["Carros"].config(text=str(carros_ocupados))
         self.stats_labels["Motos"].config(text=str(motos_ocupadas))
-        self.stats_labels["Otros"].config(text=str(otros_ocupados))
+        self.stats_labels["Buses"].config(text=str(buses_ocupados))
 
     def actualizar_reloj(self):
-        """Actualiza la etiqueta del reloj cada segundo."""
         ahora = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.reloj_label.config(text=ahora)
-        self.root.after(1000, self.actualizar_reloj) # Llama a esta función de nuevo después de 1000ms (1 segundo)
+        self.root.after(1000, self.actualizar_reloj) 
+
+    def es_hora_pico(self, hora_actual):
+
+        for h_inicio, m_inicio, h_fin, m_fin in HORAS_PICO:
+            inicio_pico = hora_actual.replace(hour=h_inicio, minute=m_inicio, second=0, microsecond=0)
+            fin_pico = hora_actual.replace(hour=h_fin, minute=m_fin, second=0, microsecond=0)
+            if inicio_pico <= hora_actual <= fin_pico:
+                return True
+        return False
+
+    def calcular_costo(self, tipo_vehiculo, tiempo_estacionado_minutos, hora_entrada):
+        
+
+        tiempo_a_cobrar_minutos = max(0, tiempo_estacionado_minutos - TIEMPO_GRACIA_ESTACIONAMIENTO_MINUTOS)
+
+        tarifa_base_por_minuto = TARIFAS_POR_MINUTO.get(tipo_vehiculo, 0)
+        costo_total = 0
+
+        for i in range(int(tiempo_a_cobrar_minutos)):
+
+            minuto_real_cobrado = hora_entrada + datetime.timedelta(minutes=TIEMPO_GRACIA_ESTACIONAMIENTO_MINUTOS + i)
+            
+            costo_minuto = tarifa_base_por_minuto
+            if self.es_hora_pico(minuto_real_cobrado):
+                costo_minuto += TARIFA_ADICIONAL_PICO
+            costo_total += costo_minuto
+        return costo_total
 
     def ingresar_vehiculo(self):
-        """Gestiona la entrada de un vehículo al parqueadero."""
         placa = self.placa_entry.get().strip().upper()
-        tipo = self.tipo_var.get() # 'optimus', 'bumblebee', 'megatron'
+        tipo = self.tipo_var.get() # 'carro', 'moto', 'bus'
 
         if not placa:
             messagebox.showwarning("Error", "Debes ingresar una placa.")
             return
 
-        # Verificar si la placa ya está en el parqueadero (ocupando un espacio)
         for p, datos in self.vehiculos.items():
-            if p == placa and datos[0] != 'R': # Si ya está y no es solo una reserva
+            if p == placa and datos[0] != 'R': 
                 messagebox.showwarning("Error", "Este vehículo ya está en el parqueadero.")
                 return
 
         espacio_encontrado = False
-        # 1. Intentar ocupar una reserva existente para esta placa
+        
         if placa in self.vehiculos and self.vehiculos[placa][0] == 'R':
-            _, i, j, _ = self.vehiculos[placa]
-            self.mapa[i][j] = f'O_{tipo}' # Ocupar el espacio reservado
-            self.vehiculos[placa] = (tipo, i, j, datetime.datetime.now()) # Actualizar datos del vehículo
+            
+            del self.vehiculos[placa]
+            
+            _, i, j, _ = self.vehiculos[placa] 
+            res_tipo, res_i, res_j, res_hora = self.vehiculos[placa]
+            del self.vehiculos[placa]
+
+            self.mapa[res_i][res_j] = f'O_{tipo}' 
+            self.vehiculos[placa] = (tipo, res_i, res_j, datetime.datetime.now()) 
             espacio_encontrado = True
         else:
-            # 2. Si no hay reserva, buscar el primer espacio 'P' libre
+            
             for i in range(FILAS):
                 for j in range(COLUMNAS):
-                    if self.mapa[i][j] == 'P': # Buscar un espacio de parking libre
-                        self.mapa[i][j] = f'O_{tipo}' # Marcar como ocupado
+                    if self.mapa[i][j] == 'P': 
+                        self.mapa[i][j] = f'O_{tipo}' 
                         self.vehiculos[placa] = (tipo, i, j, datetime.datetime.now())
                         espacio_encontrado = True
                         break
@@ -327,32 +342,30 @@ class ParqueaderoApp:
             self.dibujar_mapa()
             self.actualizar_lista_vehiculos()
             self.actualizar_estadisticas()
-            messagebox.showinfo("Éxito", f"Vehículo {placa} ingresado como {tipo.capitalize().replace('optimus', 'Carro').replace('bumblebee', 'Moto').replace('megatron', 'Otro')}.")
+            messagebox.showinfo("Éxito", f"Vehículo {placa} ingresado como {tipo.capitalize()}.")
         else:
             messagebox.showinfo("Parqueadero Lleno", "No hay espacios disponibles.")
 
     def retirar_vehiculo(self):
-        """Gestiona la salida de un vehículo del parqueadero y calcula el costo."""
+        """Gestiona la salida de vehículos del aparcamiento y calcula el coste."""
         placa = self.placa_entry.get().strip().upper()
         if not placa:
             messagebox.showwarning("Error", "Debes ingresar una placa.")
             return
 
-        # Verificar si la placa está en los vehículos y no es solo una reserva
         if placa not in self.vehiculos or self.vehiculos[placa][0] == 'R':
             messagebox.showwarning("Error", "Vehículo no encontrado en el parqueadero (o es solo una reserva).")
             return
 
-        # Recuperar datos del vehículo
         tipo, i, j, hora_entrada = self.vehiculos.pop(placa)
 
-        # Marcar el espacio como libre 'P' (parking)
         self.mapa[i][j] = 'P'
 
-        # Calcular tiempo y costo
+        # Calcula el costo del tiempo
         tiempo_estacionado = datetime.datetime.now() - hora_entrada
         minutos = tiempo_estacionado.total_seconds() / 60
-        costo = int(minutos) * TARIFA
+        
+        costo = self.calcular_costo(tipo, minutos, hora_entrada)
 
         self.dibujar_mapa()
         self.actualizar_lista_vehiculos()
@@ -360,42 +373,84 @@ class ParqueaderoApp:
         messagebox.showinfo("Pago de Parqueadero",
                              f"Vehículo: {placa}\n"
                              f"Tiempo estacionado: {int(minutos)} minutos\n"
-                             f"Total a pagar: ${costo:,.0f}") # Formato de moneda
+                             f"Total a pagar: ${costo:,.0f}") # Currency format
 
-    def reservar_espacio(self):
-        """Permite reservar un espacio en el parqueadero."""
+    def reservar_espacio_ui(self):
+        """
+        Solicita al usuario la fila y la columna para reservar un espacio específico.
+        Esta función se llama desde el botón UI.
+        """
         placa = self.placa_entry.get().strip().upper()
+ 
+
         if not placa:
-            messagebox.showwarning("Error", "Debes ingresar una placa para la reserva.")
+            messagebox.showwarning("Error", "Ingrese la placa del vehículo para la reserva.")
             return
 
-        # Verificar si la placa ya tiene una reserva o está ocupando un espacio
         if placa in self.vehiculos:
             messagebox.showwarning("Error", "Este vehículo ya está en el parqueadero o ya tiene una reserva activa.")
             return
 
-        # Buscar el primer espacio 'P' libre para reservar
-        espacio_reservado = False
-        for i in range(FILAS):
-            for j in range(COLUMNAS):
-                if self.mapa[i][j] == 'P': # Buscar un espacio de parking libre
-                    self.mapa[i][j] = 'R' # Marcar como Reservado
-                    # Almacenar la reserva en vehiculos, con un tipo 'R' para identificarla
-                    self.vehiculos[placa] = ('R', i, j, datetime.datetime.now())
-                    espacio_reservado = True
-                    break
-            if espacio_reservado:
-                break
+        try:
+            fila = simpledialog.askinteger("Fila", f"Ingrese fila para reservar (0-{FILAS-1}):", parent=self.root, minvalue=0, maxvalue=FILAS-1)
+            if fila is None: 
+                return
+            columna = simpledialog.askinteger("Columna", f"Ingrese columna para reservar (0-{COLUMNAS-1}):", parent=self.root, minvalue=0, maxvalue=COLUMNAS-1)
+            if columna is None: 
+                return
+        except Exception as e:
+            messagebox.showwarning("Error", f"Entrada de fila/columna inválida: {e}")
+            return
 
-        if espacio_reservado:
+        if not (0 <= fila < FILAS and 0 <= columna < COLUMNAS):
+            messagebox.showwarning("Error", "Fila y columna fuera de rango.")
+            return
+
+        self._reservar_espacio(placa, fila, columna)
+
+    def _reservar_espacio(self, placa, fila, columna):
+        """
+        Lógica interna para reservar un espacio específico.
+        Asume que placa, fila y columna ya están validadas.
+        """
+        if self.mapa[fila][columna] == 'P': 
+            self.mapa[fila][columna] = 'R' 
+            self.vehiculos[placa] = ('R', fila, columna, datetime.datetime.now())
             self.dibujar_mapa()
-            self.actualizar_lista_vehiculos() # La lista mostrará la reserva
+            self.actualizar_lista_vehiculos() 
             self.actualizar_estadisticas()
-            messagebox.showinfo("Reserva Exitosa", f"Espacio reservado para la placa {placa}.")
+            messagebox.showinfo("Reserva Exitosa", f"Espacio reservado para la placa {placa} en ({fila}, {columna}). Tendrá {TIEMPO_GRACIA_RESERVA_MINUTOS} minutos para ingresar.")
         else:
-            messagebox.showinfo("Parqueadero Lleno", "No hay espacios disponibles para reservar.")
+            messagebox.showerror("Error", "El espacio seleccionado ya está ocupado o no es un espacio de parking válido.")
 
-# Punto de entrada de la aplicación
+    def verificar_reservas_expiradas(self):
+        """
+        Comprueba si hay reservas caducadas y libera los espacios.
+        Esta función se llama periódicamente.
+        """
+        reservas_a_eliminar = []
+        ahora = datetime.datetime.now()
+
+        for placa, datos in list(self.vehiculos.items()): 
+            tipo, fila, columna, hora_reserva = datos
+            if tipo == 'R':
+                tiempo_transcurrido = ahora - hora_reserva
+                if tiempo_transcurrido.total_seconds() / 60 > TIEMPO_GRACIA_RESERVA_MINUTOS:
+                    reservas_a_eliminar.append(placa)
+                    if self.mapa[fila][columna] == 'R':
+                        self.mapa[fila][columna] = 'P'
+                    messagebox.showinfo("Reserva Expirada", f"La reserva para la placa {placa} en ({fila}, {columna}) ha expirado.")
+
+        for placa in reservas_a_eliminar:
+            del self.vehiculos[placa]
+
+        if reservas_a_eliminar:
+            self.dibujar_mapa()
+            self.actualizar_lista_vehiculos()
+            self.actualizar_estadisticas()
+
+        self.root.after(5000, self.verificar_reservas_expiradas)
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = ParqueaderoApp(root)
