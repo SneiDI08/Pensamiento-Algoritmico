@@ -1,9 +1,8 @@
 # Proyecto LOIHER PARKING Game
 
-## Integrantes del Equipo:
+## Integrantes del Equipo: 
+* Dady Sneider Loaiza Loaiza
 * David Hernandez Leyton 
-* 
-* 
 
 ---
 
@@ -12,76 +11,54 @@
 Bienvenido al proyecto "gestion de parqueaderos", en este proyecto se realizo un sistema de organizacion de parqueo segun llegada y tipo de vehiculo con este sistema se desea tambien poder calcular el valor segun tiempo y todo dependiendo de si es hora pico o no. 
 
 ## 2. Problema (¿De qué es el programa?)
-El sistema 
+El programa es un **sistema de gestión de parqueaderos** que simula las operaciones básicas de un estacionamiento real, diseñado en **Python**. Su objetivo es administrar la entrada, salida y estadía de vehículos mediante un **mapa visual** (mínimo 8x8) que muestra vías de acceso, entrada/salida y espacios accesibles. Registra la **placa** y **hora de entrada** de cada vehículo, calcula tarifas según el tiempo de permanencia y actualiza en tiempo real la disponibilidad de espacios (libres `[L]`/ocupados `[O]`). El sistema resuelve problemas como la gestión manual de registros, el cálculo impreciso de cobros y la falta de visibilidad de espacios disponibles. Ejemplo: un vehículo con placa `ABC123` ingresa, el mapa se actualiza, y al salir se calcula el pago (ej: 2 horas × $3.000/h = $6.000). Requisitos mínimos incluyen generación del mapa, rutas accesibles, registro de datos y cobro automático. Posibles mejoras: base de datos, interfaz gráfica (Tkinter) o sistema de reservas. 
 
 ## 3. Explicación del Programa
 
-"Papumon Game" es un juego de batallas por turnos donde los jugadores eligen un equipo de cinco Papumones para enfrentarse a otro jugador o a una Inteligencia Artificial. Cada Papumon tiene sus propias estadísticas (vida, defensa, aguante) y un conjunto de ataques únicos, cada uno con un poder y un costo de aguante asociados.
+Este sistema de registro de vehiculos es un gran reto personal de autocrecimiento, este sistema fue desarrollado en Python con interfaz gráfica (Tkinter) que permite administrar la entrada, salida y reserva de vehículos en un estacionamiento.
 
 El flujo principal del juego es el siguiente:
-1.  **Menú Principal:** El jugador puede elegir entre iniciar una batalla contra otro jugador, contra la IA, o salir del juego.
-2.  **Selección de Papumones:** Antes de la batalla, cada jugador (o el jugador contra la IA) selecciona cuidadosamente cinco Papumones de una lista de disponibles para formar su equipo. Se evita la selección de Papumones duplicados.
-3.  **Batalla:**
-    * La batalla se desarrolla por turnos.
-    * Cada Papumon activo se muestra en pantalla junto con su barra de vida y aguante, y su arte ASCII distintivo.
-    * En su turno, un jugador elige entre usar uno de los ataques de su Papumon o "curar" su aguante.
-    * Los ataques consumen aguante y reducen la vida del Papumon oponente, teniendo en cuenta la defensa del defensor.
-    * Si un Papumon pierde toda su vida, es derrotado y el siguiente Papumon del equipo entra en juego.
-    * La batalla termina cuando un equipo derrota a todos los Papumones del oponente.
+1.  **Mapeo del parueadero:** sencillamente es la parte visual para ver las rutas de salida y los espacios de parqueo libres o si ya estan ocupados.
+2.  **Tipos de vehiculos:** Solo hay registro de tres tipos de vehiculos y cada vehiculo tiene una tarifa personalizada   
+3.  **Calculo de tarifas:** esta funcion ayuda a calcular la tarifa por tiempo de cada tipo de vehiculo, adicionalmente en esta funcion tenemos un adicional que es un incremento cuando es hora pico.
 
 ## 4. Explicación de Cosas Usualmente no Vistas
 
-A pesar de ser un juego de consola, hemos implementado características que normalmente se encuentran en interfaces gráficas o juegos más complejos:
+A pesar de ser un sistema que visualmente se ve basico, se implementaron funciones adicionales a los aspectos basicos del documento base, esos son:
 
-* **Representación Visual Dinámica con Arte ASCII:** A diferencia de muchos programas de consola que solo usan texto plano para la información, "Papumon Game" muestra un arte ASCII detallado para cada Papumon en la pantalla de batalla. Este arte ASCII no es estático; se carga dinámicamente para cada Papumon, dándoles una personalidad visual única en el campo de batalla. Esto se logra almacenando el arte ASCII como un `std::vector<std::string>` dentro de la clase `papumon` y renderizándolo línea por línea con offsets calculados para centrarlo y alinearlo en la interfaz.
+* **Poder reservar un espacio:** en el sistema se creo una funcion adicional a la de registar entrada y salida de vehiculos, eesa funcion es poder reservar un espacio para un tipo en especifico de vehiculo. En este se tiene que registrar la entrada del vehiculo y asi se libera ese espacio. La decicion del por qué implementarla, es que mucha gente desea llegar a un lugar publico como un centro comercial, pero en fechas importantes como el dia de la madre se desea contar con un lugar en el parqueadero y no dar vueltas y vueltas hasta contar con suerte, por eso se puede reservar con tiempo y no batallar con ese problema.
 
-* **Barras de Salud Visuales:** En lugar de simplemente mostrar un número de puntos de vida, el juego presenta barras de salud progresivas (`[#####-----]`) que visualizan el estado de la vida de cada Papumon. Esto mejora la legibilidad y la inmersión del jugador, permitiendo una rápida evaluación de la situación de la batalla. La longitud de la barra llena se calcula proporcionalmente a la vida actual y máxima del Papumon.
+* **Espera de 3 minutos:** gracias a la funcion de reservacion, se genero una necesidad, de llegar en menos de 3 minutos para que el el espacio ya reservado se mantenga para esa persona, despues de pasados lo 3 minutos el espacio quedara libre, ya sea para un vehiculo en llegada o una reserva nueva.
 
-* **Gestión de Recursos con "Aguante":** Más allá de solo puntos de vida, hemos introducido un sistema de "aguante" como recurso para los ataques. Cada ataque tiene un costo de aguante, y los Papumones deben gestionar este recurso sabiamente. Además, los jugadores pueden elegir una acción de "curar aguante" en su turno, añadiendo una capa estratégica a la gestión de recursos que va más allá del simple ataque/defensa.
+* **La hora pico:** aqui las horas pico son tomadas en cuenta gracias a que es hora donde mucha gente en sus vehiculos estan saliendo de sus trabajos, universidades, etc. y tienen su transporte y lo desean sacar a asa hora se les cobrara una tarifa diferente a una comun. Esta funcio se implemento gracias a estudio del mercado actual en zonas empresariales como conecta (Bogotá), zona franca (Bogotá), zona industrial montevideo (Bogotá), etc. parqueaderos que estan en los espacios cerca a las zonas ya mencionadas generan mas ganancias a esas horas que en un horario de tipo 3pm, gracias a que las personas entrar a trabajan tipo 7 y salen a las 6.
 
-* **Reutilización de Objetos Papumon para Batallas:** En lugar de crear nuevas instancias de Papumones para cada batalla, se trabaja directamente con referencias a los objetos `papumon` existentes en los vectores de equipo (`vector<papumon>&`). Esto permite que los cambios de vida y aguante persistan a lo largo de los turnos de batalla, incluso cuando un Papumon es derrotado y se pasa al siguiente, manteniendo la coherencia del estado del juego.
+* **Parqueo gratis:** esta funcion es sencilla, cuando registras que entraste al parqueadero a una hora en especifico y a los tres minutos o menos, registras tu salida, el tiempo en el parqueadero es gratis. Esto se penso para aquellas personas que tienen que recoger familiares en lugares como el aeropuerto o terminal de trasnporte y su vehiculo solo se demoro 3 minutos en el parqeuadero, seria injusto tener que pagar por algo tan insignificante.
 
-## 5. Justificación de la IA
+---
+## 5. Conclusión
 
-La implementación de una Inteligencia Artificial en "Papumon Game" se justifica por varias razones clave:
+## **Implementación Exitosa**
+El sistema desarrollado cumple integralmente con los objetivos planteados inicialmente, superando los requisitos mínimos mediante:
 
-* **Rejugabilidad y Accesibilidad:** Una IA proporciona un oponente constante y disponible, lo que permite a los jugadores disfrutar del juego en solitario sin depender de la disponibilidad de un segundo jugador. Esto aumenta significativamente la rejugabilidad y la accesibilidad del juego.
+- Un **mapa visual interactivo** de 10x10 celdas que muestra en tiempo real la disponibilidad de espacios, vías de circulación y zonas especiales (entrada/salida)
+- Un **sistema de registro automatizado** que captura placa, tipo de vehículo y timestamp de ingreso
+- **Cálculo dinámico de tarifas** considerando:  
+  ✓ Diferenciación por tipo de vehículo (carro/moto/bus)  
+  ✓ Horas pico con recargo automático  
+  ✓ Periodo de gracia antes de iniciar cobro  
 
-* **Curva de Aprendizaje y Práctica:** La IA sirve como un excelente compañero de entrenamiento para los nuevos jugadores, permitiéndoles familiarizarse con la mecánica del juego, los ataques y la gestión de Papumones antes de enfrentarse a un oponente humano.
+## **Valor Añadido**
+El proyecto incorporó características avanzadas no solicitadas inicialmente:
 
-* **Variedad de Experiencia de Juego:** Al ofrecer tanto un modo de jugador contra jugador como un modo de jugador contra IA, el juego presenta diferentes tipos de desafíos. La IA, aunque con una lógica sencilla, introduce un elemento de imprevisibilidad en la batalla.
+```python
+# Sistema de reservas con expiración automática
+def verificar_reservas_expiradas(self):
+    ahora = datetime.datetime.now()
+    if (ahora - hora_reserva).total_seconds()/60 > TIEMPO_GRACIA:
+        liberar_espacio()
+```
+Este proyecto demuestra que con herramientas básicas (Python + Tkinter) pueden desarrollarse sistemas operacionales completos. La solución no solo cumple con los requisitos académicos, sino que establece las bases para una aplicación real con:
 
-* **Demostración de Habilidades de Programación:** La implementación de una IA, incluso una básica, demuestra la capacidad de diseñar y programar lógica de comportamiento para entidades no controladas por el usuario, un componente fundamental en el desarrollo de juegos. La IA actual prioriza curar aguante si está bajo y, de lo contrario, elige un ataque aleatorio que pueda usar, lo que le da un comportamiento reactivo y estratégico básico.
-
-## 6. Cómo Compilarlo en C++ usando Visual Studio 2022
-
-Para compilar y ejecutar el proyecto "Papumon Game" en Visual Studio 2022, sigue estos pasos:
-
-1.  **Descargar el Repositorio:** Clona o descarga el repositorio del proyecto en tu máquina local. Asegúrate de tener la carpeta `Papumon_CLI_Game` en la raíz de tu proyecto.
-
-2.  **Abrir Visual Studio 2022:** Inicia Visual Studio 2022.
-
-3.  **Crear un Nuevo Proyecto:**
-    * En la pantalla de inicio de Visual Studio, selecciona "Crear un proyecto nuevo".
-    * En la barra de búsqueda de plantillas, busca "Aplicación de consola" y selecciona "Aplicación de consola (C++)".
-    * Haz clic en "Siguiente".
-    * Asigna un nombre al proyecto (ej. `PapumonGameProject`) y elige una ubicación para guardarlo. Asegúrate de que la "Ubicación" del proyecto sea el directorio *padre* donde se encuentra la carpeta `Papumon_CLI_Game`.
-    * Haz clic en "Crear".
-
-4.  **Configurar Archivos de Origen:**
-    * En el "Explorador de soluciones" (generalmente a la derecha), expande tu proyecto (ej. `PapumonGameProject`).
-    * Haz clic derecho en la carpeta "Archivos de código fuente" y selecciona "Agregar" -> "Elemento existente...".
-    * Navega a la carpeta `Papumon_CLI_Game` dentro de tu repositorio descargado.
-    * Selecciona `main.cpp`, `clases.cpp`, y `menus.cpp`. Haz clic en "Agregar".
-    * Repite el proceso para los "Archivos de encabezado": haz clic derecho en la carpeta "Archivos de encabezado", selecciona "Agregar" -> "Elemento existente...", y selecciona `clases.h` y `menus.h`. Haz clic en "Agregar".
-    * **Importante:** Elimina el archivo `*.cpp` que Visual Studio crea por defecto con el nuevo proyecto (generalmente `PapumonGameProject.cpp` o `Source.cpp` en "Archivos de código fuente") para evitar conflictos de múltiples funciones `main`. Haz clic derecho sobre él y selecciona "Eliminar".
-
-5.  **Compilar y Ejecutar:**
-    * Asegúrate de que la configuración de la solución sea "Depuración" y "x64" (o "x86" si tu sistema es de 32 bits, aunque x64 es lo más común).
-    * Haz clic en el botón "Iniciar depuración" (el triángulo verde) o ve a "Depurar" -> "Iniciar depuración" (o Ctrl + F5 para iniciar sin depurar).
-
-Visual Studio compilará el código y ejecutará el programa en una ventana de consola.
-
-## 7. Conclusión
-
-"Papumon Game" es una demostración robusta de cómo se pueden implementar las mecánicas de un juego de rol de batallas por turnos en un entorno de línea de comandos utilizando C++. El proyecto destaca por su sistema de combate estratégico, la inclusión de una IA para un solo jugador y la atención al detalle en la presentación visual a través del arte ASCII. Este proyecto no solo cumple con los requisitos funcionales de un juego de batallas, sino que también explora soluciones creativas para las limitaciones de la CLI, ofreciendo una experiencia de juego atractiva y rejugable. Es un testimonio de que la creatividad en el desarrollo de juegos no se limita a entornos gráficos complejos, sino que puede prosperar en la simplicidad y el ingenio de la programación en consola.
+✔ Precisión en gestión de espacios
+✔ Transparencia en cálculo de tarifas
+✔ Flexibilidad para adaptarse a necesidades futuras
