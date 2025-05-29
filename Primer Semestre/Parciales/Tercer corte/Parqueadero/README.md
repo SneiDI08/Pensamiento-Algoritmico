@@ -59,6 +59,8 @@ def verificar_reservas_expiradas(self):
 ```
 Este proyecto demuestra que con herramientas básicas (Python + Tkinter) pueden desarrollarse sistemas operacionales completos. La solución no solo cumple con los requisitos académicos, sino que establece las bases para una aplicación real con:
 
-✔ Precisión en gestión de espacios
-✔ Transparencia en cálculo de tarifas
-✔ Flexibilidad para adaptarse a necesidades futuras
+* Precisión en gestión de espacios
+
+* Transparencia en cálculo de tarifas
+  
+* Flexibilidad para adaptarse a necesidades futuras
