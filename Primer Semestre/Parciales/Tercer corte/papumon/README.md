@@ -1,8 +1,8 @@
 # Proyecto Papumon
 
 ## Integrantes del Equipo:
-* [Nombre Completo del Compañero 1]
-* [Nombre Completo del Compañero 2]
+* [Dady Sneider Loaiza Loaiza]
+* [David Hernandez Leyton]
 
 ---
 
@@ -362,3 +362,26 @@ Visual Studio compilará el código y ejecutará el programa en una ventana de c
 ## 8. Conclusión
 
 "Papumon" es una demostración de cómo se pueden implementar las mecánicas de un juegode batallas por turnos en un entorno de línea de comandos utilizando C++. El proyecto destaca por su sistema de combate estratégico, la inclusión de una IA para un solo jugador y la atención al detalle en la presentación visual a través del arte ASCII. Este proyecto no solo cumple con los requisitos funcionales de un juego de batallas, sino que también explora soluciones creativas para las limitaciones de la CLI, ofreciendo una experiencia de juego atractiva y rejugable. Es un testimonio de que la creatividad en el desarrollo de juegos no se limita a entornos gráficos complejos, sino que puede prosperar en la simplicidad y el ingenio de la programación en consola.
+
+---
+
+### **9. CONTRIBUCIONES**
+Puedes contribuir a lo que sea con este codigo, es totalmente abiero, puedes hacer comentario, o de paso modificar el codigo en su totalidad.
+
+---
+
+### **10. ATRIBUCIONES Y RECONOCIMIENTOS**
+
+Este proyecto se ha desarrollado con la valiosa ayuda y el conocimiento compartido por diversos creadores de contenido educativo. Agradecemos su contribución que ha sido fundamental para la implementación de ciertas funcionalidades y la comprensión de conceptos clave en C++.
+
+Extendemos un especial reconocimiento a:
+
+* **Tutos Edgar**
+    * **Contribución:** Su contenido y explicaciones fueron cruciales para la elaboración de la estructura y la lógica de los menús interactivos del juego.
+    * **Recurso Específico:** Video disponible en [youtube.com/1](https://www.youtube.com/watch?v=ogi2b30Klcg&t=102s&pp=ygUUY3JlYXIgdW4gbWVudSBlbiBjKys%3D) (Se recomienda verificar el enlace y, si es posible, especificar el título del video para mayor claridad).
+
+* **Programación ATS**
+    * **Contribución:** Sus recursos fueron de gran ayuda para profundizar en la comprensión y aplicación del concepto de clases en C++, pilar fundamental de la organización de este proyecto.
+    * **Recurso Específico:** Video disponible en [youtube.com/2](https://www.youtube.com/watch?v=tbVHbfIVxs4&t=350s&pp=ygUNY2xhc2VzIGVuIGMrKw%3D%3D) (Se recomienda verificar el enlace y, si es posible, especificar el título del video para mayor claridad).
+
+---
