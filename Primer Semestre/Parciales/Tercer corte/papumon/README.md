@@ -31,15 +31,13 @@ El flujo principal del juego es el siguiente:
 
 ## 4. Explicaciónes del codigo.
 
-A pesar de ser un juego de consola, hemos implementado características que normalmente se encuentran en interfaces gráficas o juegos más complejos, enriqueciendo la experiencia del usuario:
-
-### 4.1. Representación Visual Dinámica con Arte ASCII
+### 4.1. Representación Visual con Arte ASCII
 
 * **¿Para qué se implementó?**
-    Se implementó para darle una identidad visual única y atractiva a cada Papumon dentro del entorno de la consola, mejorando la inmersión del jugador a pesar de las limitaciones gráficas de una interfaz de línea de comandos.
+    Se implementó para darle una identidad visual a cada Papumon dentro del entorno de la consola, mejorando la inmersión en el juego, a pesar de las limitaciones gráficas de una interfaz de línea de comandos.
 
 * **¿Por qué se consideró necesario?**
-    Aunque es un juego de consola, la representación visual es importante para diferenciar a los personajes y hacer la experiencia más agradable. El arte ASCII es una forma creativa y efectiva de lograr esto en un entorno de texto, permitiendo que cada Papumon tenga una apariencia distintiva.
+    Aunque es un juego de consola, la representación visual es importante para diferenciar a los personajes y hacer la experiencia más agradable. El arte ASCII es una forma de lograr esto en un entorno de texto, permitiendo que cada Papumon tenga una apariencia distintiva.
 
 * **¿Cómo se llevó a cabo su implementación?**
     Cada objeto `papumon` tiene un miembro `std::vector<std::string> ascii_art` que almacena las líneas de su representación ASCII. Estas representaciones se definen en el archivo `clases.cpp` al crear los Papumones:
@@ -58,10 +56,9 @@ A pesar de ser un juego de consola, hemos implementado características que norm
     // Luego, se pasa al constructor de papumon
     papumon("Ignivorax", "Fuego", 100, 5, 30, ataques_fuego(), ignivorax_art),
     ```
-    La función `display_battle_state` (en `menus.cpp`) es la encargada de iterar sobre este vector y imprimir cada línea con un desplazamiento calculado para alinear el arte en la pantalla de batalla, creando una visualización dinámica lado a lado:
+    Según GEMINI (IA de google) se tenia que hacer una funcion la cual permita centrar el papumon  de la forma adecuada. La función `display_battle_state` (en `menus.cpp`) es la encargada de iterar sobre este vector y imprimir cada línea con un desplazamiento calculado para alinear el arte en la pantalla de batalla, creando una visualización lado a lado:
 
     ```cpp
-    // Fragmento de menus.cpp dentro de display_battle_state
     for (int i = 0; i < PAPUMON_ART_HEIGHT; ++i) {
         // Obtiene la línea actual del arte ASCII para cada Papumon
         string p1_art_line = (i < p1.ascii_art.size()) ? p1.ascii_art[i] : "";
@@ -86,10 +83,9 @@ A pesar de ser un juego de consola, hemos implementado características que norm
     Esto mejora la legibilidad y la inmersión del jugador. Una barra visual permite una evaluación mucho más rápida del estado de un Papumon en comparación con solo números, lo que es crucial en la dinámica de una batalla.
 
 * **¿Cómo se llevó a cabo su implementación?**
-    La función `draw_health_bar` en `menus.cpp` calcula la porción de la barra que debe estar "llena" (con `#`) basándose en la vida actual y máxima del Papumon, y luego imprime la barra de texto.
+    Según GEMINI (IA de google) la función `draw_health_bar` en `menus.cpp` calcula la porción de la barra que debe estar "llena" (con `#`) basándose en la vida actual y máxima del Papumon, y luego imprime la barra de texto.
 
     ```cpp
-    // Fragmento de menus.cpp
     void draw_health_bar(int current_hp, int max_hp, int length, int x_offset) {
         // Calcula cuántos '#' debe tener la barra
         int filled_length = static_cast<int>(static_cast<double>(current_hp) / max_hp * length);
@@ -114,10 +110,11 @@ A pesar de ser un juego de consola, hemos implementado características que norm
     Más allá de solo puntos de vida, hemos introducido un sistema de "aguante" como recurso para los ataques. Cada ataque tiene un costo de aguante, y los Papumones deben gestionar este recurso sabiamente.
 
 * **¿Por qué se consideró necesario?**
-    Añade una capa estratégica al juego. No es solo atacar sin pensar; los jugadores deben considerar si tienen suficiente aguante para un ataque potente o si es mejor curarlo para turnos futuros, lo que enriquece la toma de decisiones tácticas.
+    Añade una capa estratégica al juego. No es solo atacar sin pensar; los jugadores deben considerar si tienen suficiente aguante para un ataque potente o si es mejor curarlo para turnos futuros.
 
 * **¿Cómo se llevó a cabo su implementación?**
     La propiedad `aguante` está presente en la clase `papumon` y `uso` en la clase `ataque`. Durante los turnos de batalla, se verifica y consume el aguante. También se ofrece la opción de "curar aguante" que repone una cantidad fija, pero con un límite máximo para evitar el abuso.
+  ---
 
     ```cpp
     // Fragmento del turno del Jugador en menu_batalla_vs_ia (menus.cpp)
@@ -150,13 +147,12 @@ A pesar de ser un juego de consola, hemos implementado características que norm
     En lugar de crear nuevas instancias de Papumones para cada batalla o turno, se trabaja directamente con referencias a los objetos `papumon` existentes en los vectores de equipo.
 
 * **¿Por qué se consideró necesario?**
-    Esta aproximación es más eficiente en memoria y en rendimiento, ya que evita la creación y destrucción constante de objetos. Además, y más importante, permite que los cambios en las estadísticas (vida, aguante) de los Papumones persistan a lo largo de los turnos y entre los cambios de Papumon en batalla, manteniendo la coherencia del estado del juego.
+    Esta aproximación es más eficiente en memoria y en rendimiento, ya que evita la creación y destrucción constante de objetos. Además, y más importante, permite que los cambios en las estadísticas (vida, aguante) de los Papumones persistan a lo largo de los turnos y entre los cambios de Papumon en batalla.
 
 * **¿Cómo se llevó a cabo su implementación?**
     Las funciones de batalla (`menu_batalla_vs_ia` y `menu_batalla`) reciben los equipos de Papumones como `vector<papumon>&` (referencias a vectores). Dentro del bucle de batalla, se utilizan referencias (`auto&`) a los Papumones activos (`jugador_papumon`, `ia_papumon`), asegurando que cualquier modificación a sus propiedades (vida, aguante) afecte directamente a los objetos originales en los vectores de equipo.
 
     ```cpp
-    // Fragmento de menu_batalla_vs_ia (menus.cpp)
     void menu_batalla_vs_ia(vector<papumon>& equipo_jugador, vector<papumon>& equipo_ia) {
         // ...
         while (indice_jugador < equipo_jugador.size() && indice_ia < equipo_ia.size()) {
@@ -169,76 +165,172 @@ A pesar de ser un juego de consola, hemos implementado características que norm
         // ...
     }
     ```
+    ### 4.5. Batalla PVE
 
-## 5. Justificación de la IA
+1.  **Prioridad de Curación de Aguante:**
+        * La IA primero verifica si el `aguante` de su Papumon activo es bajo (actualmente, `menor a 20`).
+        * Si es así, y si el aguante no ha alcanzado ya su límite de curación (50), la IA **priorizará curar su aguante** en 12 puntos. Esto es crucial para asegurar que la IA no se quede sin recursos para atacar.
 
-La implementación de una Inteligencia Artificial en "Papumon Game" se justifica por varias razones clave:
-
-* **Rejugabilidad y Accesibilidad:** Una IA proporciona un oponente constante y disponible, lo que permite a los jugadores disfrutar del juego en solitario sin depender de la disponibilidad de un segundo jugador. Esto aumenta significativamente la rejugabilidad y la accesibilidad del juego.
-* **Curva de Aprendizaje y Práctica:** La IA sirve como un excelente compañero de entrenamiento para los nuevos jugadores, permitiéndoles familiarizarse con la mecánica del juego, los ataques y la gestión de Papumones antes de enfrentarse a un oponente humano.
-* **Variedad de Experiencia de Juego:** Al ofrecer tanto un modo de jugador contra jugador como un modo de jugador contra IA, el juego presenta diferentes tipos de desafíos. La IA, aunque con una lógica sencilla, introduce un elemento de imprevisibilidad en la batalla.
-* **Demostración de Habilidades de Programación:** La implementación de una IA, incluso una básica, demuestra la capacidad de diseñar y programar lógica de comportamiento para entidades no controladas por el usuario, un componente fundamental en el desarrollo de juegos. La IA actual prioriza curar aguante si está bajo y, de lo contrario, elige un ataque aleatorio que pueda usar, lo que le da un comportamiento reactivo y estratégico básico.
-
-    ```cpp
-    // Fragmento del turno de la IA en menu_batalla_vs_ia (menus.cpp)
-    else { // Turno de la IA
-        auto& atacante = ia_papumon;
-        auto& defensor = jugador_papumon;
-
-        cout << "\nTurno de la IA (" << atacante.nombre << ")\n";
-        this_thread::sleep_for(chrono::seconds(1));
-
-        bool attacked = false;
-        // Estrategia de la IA: Prioriza curar aguante si es bajo
-        if (atacante.aguante < 20) {
-            if (atacante.aguante < 50) {
+        ```cpp
+        if (atacante.aguante < 20) { // Si el aguante es bajo
+            if (atacante.aguante < 50) { // Y si puede curar más
                 atacante.aguante += 12;
                 atacante.aguante = min(atacante.aguante, 50);
                 cout << atacante.nombre << " ha curado su aguante.\n";
                 attacked = true;
             }
         }
+        ```
 
-        if (!attacked) { // Si la IA no ha curado aguante, intenta atacar
+    2.  **Selección de Ataque Aleatoria:**
+        * Si la IA ya realizó una acción (curó aguante) o si no necesitaba curarlo, procederá a intentar atacar.
+        * Primero, recopila una lista (`vector<int> usable_attacks`) de los **índices de todos los ataques** que su Papumon activo puede usar con su `aguante` actual (es decir, `atacante.aguante >= ataque.uso`).
+        * Si esta lista de ataques utilizables no está vacía, la IA **elige uno de estos ataques al azar** utilizando `uniform_int_distribution` y `mt19937`.
+        * Una vez elegido el ataque, se calcula y aplica el `daño` al Papumon del jugador, y se consume el `aguante` del Papumon de la IA.
+
+        ```cpp
+        if (!attacked) { // Si la IA no ha curado aguante
             vector<int> usable_attacks;
-            // Recopila los índices de los ataques que puede usar con su aguante actual
             for (size_t i = 0; i < atacante.ataques.size(); ++i) {
                 if (atacante.aguante >= atacante.ataques[i].uso) {
-                    usable_attacks.push_back(i);
+                    usable_attacks.push_back(i); // Agrega índices de ataques que puede usar
                 }
             }
 
-            if (!usable_attacks.empty()) { // Si hay ataques utilizables
-                // Elige un ataque al azar de la lista de ataques utilizables
+            if (!usable_attacks.empty()) { // Si hay ataques que puede usar
                 uniform_int_distribution<> distrib(0, usable_attacks.size() - 1);
-                int chosen_attack_index = usable_attacks[distrib(gen)];
+                int chosen_attack_index = usable_attacks[distrib(gen)]; // Elige uno al azar
 
-                // Calcula y aplica el daño, consume aguante
-                int daño = max(0, atacante.ataques[chosen_attack_index].poder - defensor.defensa);
-                atacante.aguante -= atacante.ataques[chosen_attack_index].uso;
-                defensor.vida -= daño;
-                defensor.vida = max(0, defensor.vida);
-
+                // ... (cálculo y aplicación de daño) ...
                 cout << atacante.nombre << " usó " << atacante.ataques[chosen_attack_index].nombre
                      << " y causó " << daño << " de daño.\n";
                 attacked = true;
-            } else {
-                // En caso de que no tenga ataques disponibles y no haya curado aguante
-                if (atacante.aguante < 50) { // Si aún puede curar
-                    atacante.aguante += 12;
-                    atacante.aguante = min(atacante.aguante, 50);
-                    cout << atacante.nombre << " no pudo atacar y curó su aguante.\n";
-                    attacked = true;
-                } else {
-                    cout << atacante.nombre << " no pudo atacar ni curar.\n";
-                }
             }
+            // ... (manejo de caso si no hay ataques usables) ...
         }
-        this_thread::sleep_for(chrono::seconds(2));
-    }
-    ```
+        ```
 
-## 6. Cómo Compilarlo en C++ usando Visual Studio 2022
+    3.  **Manejo de Sin Opciones:**
+        * En el raro caso de que el Papumon de la IA no tenga aguante para ningún ataque disponible y tampoco haya podido curar su aguante (por ejemplo, porque ya estaba casi al máximo), la IA simplemente informará que no pudo realizar ninguna acción.
+
+    Esta estrategia básica pero efectiva asegura que la IA sea un oponente funcional y que sus acciones sean lógicas dentro del contexto del juego, proporcionando un desafío justo y variado en cada partida.
+    
+* **Rejugabilidad y Accesibilidad:** Una IA proporciona un oponente constante y disponible, lo que permite a los jugadores disfrutar del juego en solitario sin depender de la disponibilidad de un segundo jugador.
+
+* **Variedad de Experiencia de Juego:** Al ofrecer tanto un modo de jugador contra jugador como un modo de jugador contra IA, el juego presenta diferentes tipos de desafíos.
+
+### 5. Uso de Librerías y Encabezados Estándar de C++
+
+El proyecto "Papumon" hace un uso de las librerías estándar de C++ para manejar diversas funcionalidades, desde la entrada/salida hasta la generación de números aleatorios y la manipulación de cadenas de texto. A continuación, se detallan las principales librerías utilizadas y su propósito:
+
+* **`<string>`:**
+    * **Propósito:** Proporciona la clase `std::string` para trabajar con cadenas de caracteres de manera más segura y flexible que los arreglos de caracteres tradicionales de C.
+    * **Uso en el proyecto:** Se utiliza ampliamente para nombres de Papumones, nombres de ataques, tipos de Papumones y para construir las líneas de arte ASCII.
+    * **Ejemplo:**
+        ```cpp
+        #include <string> // Incluido en clases.h, menus.h, menus.cpp
+        // ...
+        std::string nombre; // Declaración de una variable de tipo string
+        // ...
+        papumon::papumon(std::string nombre, /* ... */) : nombre(nombre) { /* ... */ } // Uso en el constructor
+        ```
+
+* **`<vector>`:**
+    * **Propósito:** Proporciona la plantilla de clase `std::vector`, que es un contenedor de secuencia que permite almacenar elementos de un mismo tipo de forma dinámica (su tamaño puede crecer o reducirse en tiempo de ejecución).
+    * **Uso en el proyecto:** Es esencial para almacenar:
+        * Los ataques de un Papumon (`std::vector<ataque> ataques;`).
+        * Los equipos de Papumones de cada jugador (`std::vector<papumon> equipo_jugador;`).
+        * El arte ASCII de cada Papumon (`std::vector<std::string> ascii_art;`), donde cada `string` es una línea del dibujo.
+    * **Ejemplo:**
+        ```cpp
+        #include <vector> // Incluido en clases.h, menus.h
+        // ...
+        class papumon {
+        public:
+            std::vector<ataque> ataques; // Vector de objetos 'ataque'
+            std::vector<std::string> ascii_art; // Vector de strings para el arte ASCII
+        };
+        // ...
+        void menu_batalla_vs_ia(vector<papumon>& equipo_jugador, vector<papumon>& equipo_ia) { /* ... */ } // Paso de equipos como vectores
+        ```
+
+* **`<cstdlib>`:**
+    * **Propósito:** Contiene funciones para utilidades generales, incluyendo `system()`, que permite ejecutar comandos del sistema operativo.
+    * **Uso en el proyecto:** Principalmente para la función `system("cls");` (en Windows) que limpia la pantalla de la consola, proporcionando una interfaz de usuario más limpia y actualizada en cada turno de batalla o cambio de menú.
+    * **Ejemplo:**
+        ```cpp
+        #include <cstdlib> // Incluido en menus.cpp
+        // ...
+        system("cls"); // Limpia la pantalla de la consola
+        ```
+
+* **`<algorithm>`:**
+    * **Propósito:** Proporciona una colección de funciones para operaciones en rangos de elementos, como `min()`, `max()`, `shuffle()`, etc.
+    * **Uso en el proyecto:**
+        * `min()`: Se utiliza para limitar el `aguante` y la `vida` de los Papumones, asegurando que no excedan sus valores máximos o no sean negativos.
+        * `max()`: Para asegurar que el daño infligido no sea negativo.
+        * `shuffle()`: Para la selección aleatoria del equipo de la IA en `menu_seleccion` (si se hubiera implementado así, en este código se usa una selección aleatoria más directa en `main` o al inicio de `menu_batalla_vs_ia`).
+    * **Ejemplo:**
+        ```cpp
+        #include <algorithm> // Incluido en menus.cpp
+        // ...
+        atacante.aguante = min(atacante.aguante, 50); // Limita el aguante a 50
+        int daño = max(0, atacante.ataques[eleccion - 1].poder - defensor.defensa); // Daño mínimo de 0
+        ```
+
+* **`<random>`:**
+    * **Propósito:** Proporciona herramientas avanzadas para la generación de números aleatorios..
+    * **Uso en el proyecto:** Es crucial para la lógica de la IA. Se utiliza `std::random_device` como fuente de semilla no determinística y `std::mt19937` como el motor de números pseudoaleatorios. `std::uniform_int_distribution` se emplea para generar índices aleatorios dentro de un rango específico (por ejemplo, para seleccionar un ataque aleatorio).
+    * **Ejemplo:**
+        ```cpp
+        #include <random> // Incluido en menus.cpp
+        // ...
+        random_device rd; // Fuente de entropía
+        mt19937 gen(rd()); // Motor de números aleatorios, sembrado con rd
+        // ...
+        uniform_int_distribution<> distrib(0, usable_attacks.size() - 1); // Distribución para un rango
+        int chosen_attack_index = usable_attacks[distrib(gen)]; // Genera un índice aleatorio
+        ```
+
+* **`<chrono>` y `<thread>`:**
+    * **Propósito:**
+        * `<chrono>`: Proporciona tipos y funciones para manejar duraciones y puntos en el tiempo.
+        * `<thread>`: Permite la creación y gestión de hilos, incluyendo funciones para pausar la ejecución del hilo actual.
+    * **Uso en el proyecto:** Se utilizan en conjunto para introducir pausas controladas en la ejecución del programa (`this_thread::sleep_for`). Esto es util para mejorar la experiencia del usuario en la consola, permitiendo que los mensajes de acción y los cambios en la pantalla sean leídos y procesados por el jugador antes de que la pantalla se actualice o se pase al siguiente turno.
+    * **Ejemplo:**
+        ```cpp
+        #include <chrono> // Incluido en menus.cpp
+        #include <thread> // Incluido en menus.cpp
+        // ...
+        this_thread::sleep_for(chrono::seconds(2)); // Pausa la ejecución por 2 segundos
+        ```
+### 6. Integración de la Inteligencia Artificial (IA) en el Proceso de Desarrollo del Proyecto
+
+A continuación, se detalla cómo la IA pudo haber sido utilizada en el proceso de construcción del Papumon Game:
+
+#### 6.1. Organización y Estructuración del Código
+
+* **Identificación de Patrones:** Las herramientas de IA pueden analizar el código existente o las ideas iniciales para sugerir cómo organizar las clases, funciones y la estructura general del proyecto. Por ejemplo, al definir las propiedades de un "Papumon" o de un "ataque", la IA puede haber ayudado a identificar que estos conceptos requerirían sus propias clases (`papumon`, `ataque`) y cómo deberían relacionarse (un `papumon` tiene varios `ataque`s).
+* **Refactorización y Nomenclatura:** La IA puede ofrecer sugerencias para refactorizar código repetitivo o complejo en funciones más pequeñas y manejables. También es excelente para proponer nombres claros y consistentes para variables, funciones y clases (por ejemplo, `menu_batalla_vs_ia` vs. `menu_batalla`, o `display_battle_state`).
+
+#### 6.2. Asistencia en la Construcción Lógica del Código
+
+* **Diseño de Algoritmos:** Al abordar problemas como el cálculo de daño, la gestión de aguante o la alternancia de turnos, la IA puede ayudar a esbozar la lógica del algoritmo. Por ejemplo, al preguntar "cómo calcular el daño en un RPG por turnos considerando ataque y defensa", la IA podría sugerir `daño = max(0, poder_ataque - defensa_defensor)`.
+* **Generación de Fragmentos de Código:** Para tareas repetitivas o para implementar patrones comunes (como un bucle de juego, un menú interactivo, o la lectura segura de entrada del usuario), la IA puede generar fragmentos de código listos para usar o para adaptar, acelerando el desarrollo. Por ejemplo, el bucle `while(true)` para la validación de entrada del jugador o la lógica para alternar turnos.
+* **Propuesta de Estrategias para la IA del Oponente:** Aunque la IA del juego es sencilla, herramientas de IA pueden ayudar a conceptualizar y refinar su lógica. Por ejemplo, al pedir "dame una estrategia simple para una IA en un juego por turnos", la IA podría sugerir priorizar la curación si la salud/recursos son bajos, y luego atacar al azar.
+
+#### 6.3. Corrección de Errores
+
+* **Análisis de Errores de Compilación de Ejecución:** Cuando surgen errores de compilación (como `undeclared identifier` o `type mismatch`) o errores en tiempo de ejecución (segmentation faults, lógica incorrecta), la IA puede analizar los mensajes de error y el código circundante para identificar la causa raíz y proponer soluciones.
+* **Detección de Bugs Lógicos:** Para problemas donde el código compila pero no se comporta como se espera (ej. el aguante no se cura correctamente, el daño no se aplica bien), la IA puede revisar la lógica y señalar posibles fallos o casos no considerados. Por ejemplo, el uso de `min` y `max` para asegurar que las variables de vida y aguante se mantengan dentro de rangos válidos.
+
+#### 6.4. Petición de Ayuda y Clarificación de Conceptos
+
+* **Explicación de Sintaxis/Conceptos:** Cuando se encuentra con una característica de C++ desconocida o un concepto complejo (como paso por referencia `&`, generadores de números aleatorios en `<random>`, o las peculiaridades de `std::vector`), la IA puede proporcionar explicaciones claras, ejemplos de código y mejores prácticas.
+* **Optimización de Rendimiento/Legibilidad:** La IA puede ofrecer consejos sobre cómo escribir código más eficiente o más legible, por ejemplo, sugiriendo el uso de referencias `auto&` para evitar copias innecesarias de objetos grandes como `papumon` en los bucles de batalla.
+* **Documentación:** La IA es una herramienta excelente para generar o mejorar la documentación del código, incluyendo comentarios, descripciones de funciones y secciones para el `README.md`, como esta misma.
+
+## 7. Cómo Compilarlo en C++ usando Visual Studio 2022
 
 Para compilar y ejecutar el proyecto "Papumon Game" en Visual Studio 2022, sigue estos pasos:
 
@@ -267,6 +359,6 @@ Para compilar y ejecutar el proyecto "Papumon Game" en Visual Studio 2022, sigue
 
 Visual Studio compilará el código y ejecutará el programa en una ventana de consola.
 
-## 7. Conclusión
+## 8. Conclusión
 
-"Papumon Game" es una demostración robusta de cómo se pueden implementar las mecánicas de un juego de rol de batallas por turnos en un entorno de línea de comandos utilizando C++. El proyecto destaca por su sistema de combate estratégico, la inclusión de una IA para un solo jugador y la atención al detalle en la presentación visual a través del arte ASCII. Este proyecto no solo cumple con los requisitos funcionales de un juego de batallas, sino que también explora soluciones creativas para las limitaciones de la CLI, ofreciendo una experiencia de juego atractiva y rejugable. Es un testimonio de que la creatividad en el desarrollo de juegos no se limita a entornos gráficos complejos, sino que puede prosperar en la simplicidad y el ingenio de la programación en consola.
+"Papumon" es una demostración de cómo se pueden implementar las mecánicas de un juegode batallas por turnos en un entorno de línea de comandos utilizando C++. El proyecto destaca por su sistema de combate estratégico, la inclusión de una IA para un solo jugador y la atención al detalle en la presentación visual a través del arte ASCII. Este proyecto no solo cumple con los requisitos funcionales de un juego de batallas, sino que también explora soluciones creativas para las limitaciones de la CLI, ofreciendo una experiencia de juego atractiva y rejugable. Es un testimonio de que la creatividad en el desarrollo de juegos no se limita a entornos gráficos complejos, sino que puede prosperar en la simplicidad y el ingenio de la programación en consola.
