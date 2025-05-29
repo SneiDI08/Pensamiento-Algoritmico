@@ -1,4 +1,4 @@
-# Proyecto LOIHER PARKING sistem
+# Proyecto LOIHER PARKING system
 
 ## Integrantes del Equipo: 
 * Dady Sneider Loaiza Loaiza
